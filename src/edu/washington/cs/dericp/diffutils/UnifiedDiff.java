@@ -1,18 +1,61 @@
 package edu.washington.cs.dericp.diffutils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class UnifiedDiff {
     
     private List<Diff> diffs;
     
-    public UnifiedDiff(List<Diff> diffs) {
-        this.diffs = diffs;
+    public UnifiedDiff(List<String> unifiedDiffLines) {
+        diffs = new ArrayList<Diff>();
+        readDiffs(unifiedDiffLines);
+    }
+    
+    public UnifiedDiff(String filePath) {
+        this(Utils.fileToLines(filePath)); 
+    }
+    
+    private void readDiffs(List<String> unifiedDiffLines) {
+        if (unifiedDiffLines.isEmpty()) {
+            throw new IllegalArgumentException("Diff is empty");
+        }
+        
+        Iterator<String> iter = unifiedDiffLines.iterator();
+        String line = iter.next();
+        
+        while (iter.hasNext()) {
+            if (line.startsWith("diff")) {
+                List<String> diffLines = new ArrayList<String>();
+                diffLines.add(line);
+                
+                line = iter.next();
+                
+                while (!line.startsWith("diff") && iter.hasNext()) {
+                    diffLines.add(line);
+                    line = iter.next();
+                }
+                
+                // if last line of unifiedDiff
+                if (!iter.hasNext()) {
+                    if (!line.startsWith("diff") && !line.startsWith("index")) {
+                        diffLines.add(line);
+                    }
+                }
+                diffs.add(new Diff(diffLines));
+            } else {
+                line = iter.next();
+            }
+        }
     }
     
     public List<Diff> getDiffs() {
         return diffs;
+    }
+    
+    public void removeDiff(int diffNumber) {
+        diffs.set(diffNumber, null);
     }
     
     // zero based indexing

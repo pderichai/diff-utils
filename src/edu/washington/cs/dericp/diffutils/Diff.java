@@ -6,13 +6,11 @@ import java.util.List;
 
 public class Diff {
     
-    private String filePathA;
-    private String filePathB;
+    private List<String> contextInfo;
     private List<Hunk> hunks;
     
     public Diff(List<String> diffLines) {
-        hunks = new ArrayList<Hunk>();
-        setFilePaths(diffLines);
+        setContextInfo(diffLines);
         readHunks(diffLines);
     }
     
@@ -21,22 +19,25 @@ public class Diff {
         return hunks;
     }
     
-    public Diff(String diffFilePath) {
-        this(Utils.fileToLines(diffFilePath));
+    public Diff(String filePath) {
+        this(Utils.fileToLines(filePath));
     }
     
-    private void setFilePaths(List<String> diffLines) {
+    private void setContextInfo(List<String> diffLines) {
+        contextInfo = new ArrayList<String>();
         for (Iterator<String> iter = diffLines.iterator(); iter.hasNext();) {
             String line = iter.next();
             if (line.startsWith("---")) {
-                filePathA = line;
-                filePathB = iter.next();
+                contextInfo.add(line);
+                contextInfo.add(iter.next());
                 break;
             }
+            contextInfo.add(line);
         }
     }
     
     private void readHunks(List<String> diffLines) {
+        hunks = new ArrayList<Hunk>();
         if (diffLines.isEmpty()) {
             throw new IllegalArgumentException("Diff is empty");
         }
@@ -56,7 +57,7 @@ public class Diff {
                     line = iter.next();
                 }
                 
-                // if last line of Hunk
+                // if last line of Diff
                 if (!iter.hasNext()) {
                     hunkLines.add(line);
                 }
@@ -69,8 +70,7 @@ public class Diff {
     
     public List<String> diffToLines() {
         List<String> diff = new ArrayList<String>();
-        diff.add(filePathA);
-        diff.add(filePathB);
+        diff.addAll(contextInfo);
         for (Hunk hunk : hunks) {
             if (hunk != null) {
                 diff.addAll(hunk.hunkToLines());
