@@ -1,45 +1,55 @@
 package edu.washington.cs.dericp.diffutils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UnifiedDiff {
     
     /* multiple diff handling not yet supported */
     
-    private Diff diff;
+    private List<Diff> diffs;
     
-    public UnifiedDiff(Diff diff) {
-        this.diff = diff;
+    public UnifiedDiff(List<Diff> diffs) {
+        this.diffs = diffs;
     }
     
-    public Diff getDiff() {
-        return diff;
+    public List<Diff> getDiffs() {
+        return diffs;
     }
     
     // zero based indexing
-    public void removeHunk(int hunkNumber) {
-        Hunk hunk = diff.getHunks().get(hunkNumber);
-        int offset = hunk.getOriginalHunkSize() - hunk.getRevisedHunkSize();
-        for (int i = hunkNumber + 1; i < diff.getHunks().size(); ++i) {
-           diff.getHunks().get(i).modifyRevisedLineNumber(offset);
+    public void removeHunk(int diffNumber, int hunkNumber) {
+        List<Hunk> hunks = diffs.get(diffNumber).getHunks();
+        Hunk removedHunk = hunks.get(hunkNumber);
+        int offset = removedHunk.getOriginalHunkSize() - removedHunk.getRevisedHunkSize();
+        for (int i = hunkNumber + 1; i < diffs.get(diffNumber).getHunks().size(); ++i) {
+           hunks.get(i).modifyRevisedLineNumber(offset);
         }
-        diff.getHunks().set(hunkNumber, null);
+        hunks.set(hunkNumber, null);
     }
     
     // zero based indexing
-    public void removeChangeFromHunk(int hunkNumber, int lineNumber) {
-        int result = diff.getHunks().get(hunkNumber).removeLine(lineNumber);
+    public void removeChangeFromHunk(int diffNumber, int hunkNumber, int lineNumber) {
+        List<Hunk> hunks = diffs.get(diffNumber).getHunks();
+        Hunk modifiedHunk = hunks.get(hunkNumber);
+        int result = modifiedHunk.removeLine(lineNumber);
         if (result != 0) {
-            for (int i = hunkNumber + 1; i < diff.getHunks().size(); i++) {
+            for (int i = hunkNumber + 1; i < hunks.size(); i++) {
                 if (result == 1) {
-                    diff.getHunks().get(i).modifyRevisedLineNumber(-1);
+                    hunks.get(i).modifyRevisedLineNumber(-1);
                 }
                 if (result == -1) {
-                    diff.getHunks().get(i).modifyRevisedLineNumber(1);
+                    hunks.get(i).modifyRevisedLineNumber(1);
                 }
             }
         }
     }
     
-    public void exportUnifiedDiff(String filepath) {
-        diff.exportDiff(filepath);
+    public void exportUnifiedDiff(String filePath) {
+        List<String> export = new ArrayList<String>();
+        for (Diff diff : diffs) {
+            export.addAll(diff.diffToLines());
+        }
+        Utils.linesToFile(export, filePath);
     }
 }

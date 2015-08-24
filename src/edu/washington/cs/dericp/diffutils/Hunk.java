@@ -61,7 +61,7 @@ public class Hunk {
         return endContext;
     }
     
-    public List<String> getHunkLines() {
+    public List<String> hunkToLines() {
         List<String> hunkLines = new ArrayList<String>();
         hunkLines.add(getContextInfo());
         hunkLines.addAll(getStartContext());
@@ -103,6 +103,5 @@ public class Hunk {
     public void modifyRevisedLineNumber(int change) {
         revisedLineNumber = revisedLineNumber + change;
     }
-
 }
 

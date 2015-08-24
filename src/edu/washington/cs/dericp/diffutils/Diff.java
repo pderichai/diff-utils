@@ -18,6 +18,11 @@ public class Diff {
         readHunks(diffLines);
     }
     
+    
+    public List<Hunk> getHunks() {
+        return hunks;
+    }
+    
     public Diff(String diffFilePath) {
         this(Utils.fileToLines(diffFilePath));
     }
@@ -64,19 +69,15 @@ public class Diff {
         }
     }
     
-    public void exportDiff(String filepath) {
-        List<String> export = new ArrayList<String>();
-        export.add(filePathA);
-        export.add(filePathB);
+    public List<String> diffToLines() {
+        List<String> diff = new ArrayList<String>();
+        diff.add(filePathA);
+        diff.add(filePathB);
         for (Hunk hunk : hunks) {
             if (hunk != null) {
-                export.addAll(hunk.getHunkLines());
+                diff.addAll(hunk.hunkToLines());
             }
         }
-        Utils.linesToFile(export, filepath);
-    }
-    
-    public List<Hunk> getHunks() {
-        return hunks;
+        return diff;
     }
 }
