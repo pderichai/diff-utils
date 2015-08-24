@@ -6,6 +6,9 @@ import java.util.List;
 
 public class UnifiedDiff {
     
+    // This field changes depending on what signifies a new diff.
+    // In some formats, this could be "diff," and in others "---".
+    public static final String DIFF_SPLIT = "diff";
     private List<Diff> diffs;
     
     public UnifiedDiff(List<String> unifiedDiffLines) {
@@ -26,22 +29,20 @@ public class UnifiedDiff {
         String line = iter.next();
         
         while (iter.hasNext()) {
-            if (line.startsWith("diff")) {
+            if (line.startsWith(DIFF_SPLIT)) {
                 List<String> diffLines = new ArrayList<String>();
                 diffLines.add(line);
                 
                 line = iter.next();
                 
-                while (!line.startsWith("diff") && iter.hasNext()) {
+                while (!line.startsWith(DIFF_SPLIT) && iter.hasNext()) {
                     diffLines.add(line);
                     line = iter.next();
                 }
                 
                 // if last line of unifiedDiff
                 if (!iter.hasNext()) {
-                    if (!line.startsWith("diff") && !line.startsWith("index")) {
-                        diffLines.add(line);
-                    }
+                    diffLines.add(line);
                 }
                 diffs.add(new Diff(diffLines));
             } else {
