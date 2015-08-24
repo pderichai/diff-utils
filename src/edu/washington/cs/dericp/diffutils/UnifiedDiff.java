@@ -5,8 +5,6 @@ import java.util.List;
 
 public class UnifiedDiff {
     
-    /* multiple diff handling not yet supported */
-    
     private List<Diff> diffs;
     
     public UnifiedDiff(List<Diff> diffs) {

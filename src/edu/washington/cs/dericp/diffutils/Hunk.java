@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Hunk {
+    
     public static final int CONTEXT_SIZE = 3;
     
     private List<String> originalHunkLines;
