@@ -14,6 +14,7 @@ public class Hunk {
     private int originalHunkSize;
     private int revisedLineNumber;
     private int revisedHunkSize;
+    private String fileNameInfo;
     
     public Hunk(List<String> originalHunkLines) { 
         this.originalHunkLines = originalHunkLines;
@@ -24,6 +25,18 @@ public class Hunk {
         }
     }
     
+    public Hunk(Hunk other) {
+        originalLineNumber = other.originalLineNumber;
+        originalHunkSize = other.originalHunkSize;
+        revisedLineNumber = other.revisedLineNumber;
+        revisedHunkSize = other.revisedHunkSize;
+        originalHunkLines = new ArrayList<String>();
+        originalHunkLines.addAll(other.originalHunkLines);
+        modifiedLines = new ArrayList<String>();
+        modifiedLines.addAll(other.modifiedLines);
+        fileNameInfo = other.fileNameInfo;
+    }
+    
     public void setContextInfo(String contextInfo) {
         Scanner input = new Scanner(contextInfo);
         input.useDelimiter("[^0-9]+");
@@ -32,10 +45,11 @@ public class Hunk {
         revisedLineNumber = input.nextInt();
         revisedHunkSize = input.nextInt();
         input.close();
+        fileNameInfo = contextInfo.replaceFirst("@@.*@@ ", "");
     }
     
     public String getContextInfo() {
-        return ("@@ -" + originalLineNumber + ',' + originalHunkSize + " +" + revisedLineNumber + ',' + revisedHunkSize + " @@");
+        return ("@@ -" + originalLineNumber + ',' + originalHunkSize + " +" + revisedLineNumber + ',' + revisedHunkSize + " @@" + " " + fileNameInfo);
     }
     
     public List<String> getModifiedLines() {

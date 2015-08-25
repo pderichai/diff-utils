@@ -12,7 +12,6 @@ public class UnifiedDiff {
     private List<Diff> diffs;
     
     public UnifiedDiff(List<String> unifiedDiffLines) {
-        diffs = new ArrayList<Diff>();
         readDiffs(unifiedDiffLines);
     }
     
@@ -20,7 +19,16 @@ public class UnifiedDiff {
         this(Utils.fileToLines(filePath)); 
     }
     
+    // Special constructor that can create a copy of a unified diff
+    public UnifiedDiff(UnifiedDiff other) {
+        diffs = new ArrayList<Diff>();
+        for (Diff diff : other.diffs) {
+            diffs.add(new Diff(diff));
+        }
+    }
+    
     private void readDiffs(List<String> unifiedDiffLines) {
+        diffs = new ArrayList<Diff>();
         if (unifiedDiffLines.isEmpty()) {
             throw new IllegalArgumentException("Diff is empty");
         }
@@ -77,11 +85,14 @@ public class UnifiedDiff {
         int result = modifiedHunk.removeLine(lineNumber);
         if (result != 0) {
             for (int i = hunkNumber + 1; i < hunks.size(); i++) {
-                if (result == 1) {
-                    hunks.get(i).modifyRevisedLineNumber(-1);
-                }
-                if (result == -1) {
-                    hunks.get(i).modifyRevisedLineNumber(1);
+                Hunk currentHunk = hunks.get(i);
+                if (currentHunk != null) {
+                    if (result == 1) {
+                        hunks.get(i).modifyRevisedLineNumber(-1);
+                    }
+                    if (result == -1) {
+                        hunks.get(i).modifyRevisedLineNumber(1);
+                    }
                 }
             }
         }
