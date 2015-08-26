@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * A diff denotes changes to a specific file.
+ */
 public class Diff {
     
     private List<String> contextInfo;
@@ -11,20 +14,31 @@ public class Diff {
     private String filePathB;
     private List<Hunk> hunks;
     
+    /**
+     * Constructs a new diff.
+     * 
+     * @param diffLines     the lines of the diff
+     */
     public Diff(List<String> diffLines) {
         setContextInfo(diffLines);
         readHunks(diffLines);
     }
     
-    public List<Hunk> getHunks() {
-        return hunks;
-    }
     
+    /**
+     * Constructs a diff from a file at a given file path
+     * 
+     * @param filePath  the file path of the diff file
+     */
     public Diff(String filePath) {
         this(Utils.fileToLines(filePath));
     }
     
-    // Special constructor that copies a diff.
+    /**
+     * Constructs a copy of a diff in a new instance.
+     * 
+     * @param other     the diff that is to be copied
+     */
     public Diff(Diff other) {
         contextInfo = new ArrayList<String>();
         for (String info : other.contextInfo) {
@@ -42,6 +56,20 @@ public class Diff {
         }
     }
     
+    /**
+     * Gets the hunks of this diff.
+     * 
+     * @return  the hunks of this diff
+     */
+    public List<Hunk> getHunks() {
+        return hunks;
+    }
+    
+    /**
+     * Sets the context info of the diff
+     * 
+     * @param diffLines     the lines of the diff
+     */
     private void setContextInfo(List<String> diffLines) {
         contextInfo = new ArrayList<String>();
         for (Iterator<String> iter = diffLines.iterator(); iter.hasNext();) {
@@ -55,6 +83,11 @@ public class Diff {
         }
     }
     
+    /**
+     * Reads in the hunks of the diff
+     * 
+     * @param diffLines     the lines of the diff
+     */
     private void readHunks(List<String> diffLines) {
         hunks = new ArrayList<Hunk>();
         if (diffLines.isEmpty()) {
@@ -87,11 +120,22 @@ public class Diff {
         }
     }
     
+    /**
+     * Sets the file paths that the diff will be applied to.
+     * 
+     * @param filePathA     the first file path
+     * @param filePathB     the second file path
+     */
     public void setFilePaths(String filePathA, String filePathB) {
         this.filePathA = "--- a/" + filePathA;
         this.filePathB = "+++ b/" + filePathB;
     }
     
+    /**
+     * Returns this diff as a List of Strings.
+     * 
+     * @return      the lines of the diff
+     */
     public List<String> diffToLines() {
         List<String> diff = new ArrayList<String>();
         diff.addAll(contextInfo);

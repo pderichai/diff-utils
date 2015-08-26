@@ -9,6 +9,9 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility functions that are used throughout the diff utility.
+ */
 public class Utils {
     
     /**
