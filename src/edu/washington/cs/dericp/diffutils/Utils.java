@@ -15,6 +15,8 @@ import java.util.List;
  */
 class Utils {
     
+    public static final boolean DEBUG = true;
+    
     /**
      * Converts the file specified at relFilePath to a list of strings.
      * 
