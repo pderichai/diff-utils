@@ -11,12 +11,12 @@ import java.util.List;
 
 
 /**
- * Utility functions that are used throughout the diff utility.
+ * Utility functions that are used throughout diff-utils.
  */
 class Utils {
     
     /**
-     * Converts a File to a List of Strings.
+     * Converts the file specified at relFilePath to a list of strings.
      * 
      * @param filePath      a String, the path of the file on the machine
      * @return              a List of Strings, containing the information of the file
