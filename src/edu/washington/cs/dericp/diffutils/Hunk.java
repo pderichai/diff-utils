@@ -11,12 +11,21 @@ class Hunk {
     
     public static final int CONTEXT_SIZE = 3;
     
+    // the non-abstracted lines of the hunk i.e. what can be directly parsed
     private List<String> originalHunkLines;
+    // all the lines exclusive of the (CONTEXT_SIZE) lines at the beginning
+    // and end of the hunk
     private List<String> modifiedLines;
+    // where the hunk starts in the original file
     private int originalLineNumber;
+    // the size of the hunk in the original file
     private int originalHunkSize;
+    // where the hunk starts in the revised file
     private int revisedLineNumber;
+    // the size of the hunk in the revised file
     private int revisedHunkSize;
+    // the context information of a hunk that sits in-line next to the
+    // hunk size and line number information
     private String fileNameInfo;
     
     /**
@@ -207,6 +216,12 @@ class Hunk {
                 * revisedLineNumber
                 * revisedHunkSize
                 * fileNameInfo.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        // TODO implement this toString
+        return "";
     }
 }
 

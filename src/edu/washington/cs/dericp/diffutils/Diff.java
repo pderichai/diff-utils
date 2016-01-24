@@ -166,4 +166,21 @@ class Diff {
         return contextInfo.hashCode() * filePathA.hashCode()
                 * filePathB.hashCode() * hunks.hashCode();
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (String line : contextInfo) {
+            sb.append(line);
+            sb.append(System.lineSeparator());
+        }
+        sb.append(filePathA);
+        sb.append(System.lineSeparator());
+        sb.append(filePathB);
+        for (Hunk hunk : hunks) {
+            sb.append(System.lineSeparator());
+            sb.append(hunk.toString());
+        }
+        return sb.toString();
+    }
 }

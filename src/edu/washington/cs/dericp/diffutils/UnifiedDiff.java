@@ -130,7 +130,11 @@ public class UnifiedDiff {
      *                   is contained in
      * @param hunkNumber is the zero-based index of the hunk that the change
      *                   is contained in
-     * @param lineNumber is the zero-based index of the line number 
+     * @param lineNumber is the zero-based index of the line number of the
+     *                   change in the modified lines of the hunk. The modified
+     *                   lines are defined to be all the lines within a hunk
+     *                   exclusive of the context lines that exist at the
+     *                   beginning and end of a hunk.
      */
     public void removeChangeFromHunk(int diffNumber, int hunkNumber, int lineNumber) {
         List<Hunk> hunks = diffs.get(diffNumber).getHunks();
@@ -177,5 +181,19 @@ public class UnifiedDiff {
     @Override
     public int hashCode() {
         return diffs.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Iterator<Diff> diffIter = diffs.iterator();
+        if (diffIter.hasNext()) {
+            sb.append(diffs.get(0).toString());
+        }
+        while (diffIter.hasNext()) {
+            sb.append(System.lineSeparator());
+            sb.append(diffIter.next());
+        }
+        return sb.toString();
     }
 }
