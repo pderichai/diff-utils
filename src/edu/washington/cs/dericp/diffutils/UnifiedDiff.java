@@ -126,6 +126,28 @@ public class UnifiedDiff {
      * Removes a change in the unified diff. Conceptually, this undoes a single
      * change in a hunk.
      * 
+     * @param diffLine is the exact line in the unified diff that should be
+     *        undone
+     */
+    public void removeChange(String diffLine) {
+        for (int diffNum = 0; diffNum < diffs.size(); diffNum++) {
+            Diff currentDiff = diffs.get(diffNum);
+            for (int hunkNum = 0; hunkNum < currentDiff.getHunks().size(); hunkNum++) {
+                Hunk currentHunk = currentDiff.getHunks().get(hunkNum);
+                for (int lineNum = 0; lineNum < currentHunk.getModifiedLines().size(); lineNum++) {
+                    if (currentHunk.getModifiedLines().get(lineNum).equals(diffLine)) {
+                        removeChange(diffNum, hunkNum, lineNum);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * Removes a change in the unified diff. Conceptually, this undoes a single
+     * change in a hunk.
+     * 
      * @param diffNumber is the zero-based index of the diff that the change
      *                   is contained in
      * @param hunkNumber is the zero-based index of the hunk that the change
@@ -136,7 +158,7 @@ public class UnifiedDiff {
      *                   exclusive of the context lines that exist at the
      *                   beginning and end of a hunk.
      */
-    public void removeChangeFromHunk(int diffNumber, int hunkNumber, int lineNumber) {
+    public void removeChange(int diffNumber, int hunkNumber, int lineNumber) {
         List<Hunk> hunks = diffs.get(diffNumber).getHunks();
         Hunk modifiedHunk = hunks.get(hunkNumber);
         int result = modifiedHunk.removeLine(lineNumber);
