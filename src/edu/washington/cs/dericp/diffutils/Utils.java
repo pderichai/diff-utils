@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Utility functions that are used throughout diff-utils.
  */
-class Utils {
+public class Utils {
     
     public static final boolean DEBUG = true;
     
