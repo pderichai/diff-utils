@@ -81,7 +81,11 @@ class Hunk {
      * @return  the context information of this hunk
      */
     public String getContextInfo() {
-        return ("@@ -" + originalLineNumber + ',' + originalHunkSize + " +" + revisedLineNumber + ',' + revisedHunkSize + " @@" + " " + fileNameInfo);
+        return ("@@ -" + originalLineNumber + ',' + originalHunkSize
+                + " +" + revisedLineNumber + ',' + revisedHunkSize + " @@"
+                // TODO sometimes the fileNameInfo is empty. This case needs to
+                // be handled.
+                + " " + fileNameInfo);
     }
     
     /**
