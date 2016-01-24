@@ -1,0 +1,39 @@
+diff --git a/DeltaDebugging.java b/DeltaDebugging2.java
+index 419e3eb..f040dd9 100644
+--- a/DeltaDebugging.java
++++ b/DeltaDebugging2.java
+@@ -3,11 +3,9 @@ package edu.washington.bugisolation;
+ import edu.washington.bugisolation.input.DDInput;
+ import edu.washington.bugisolation.input.DiffsInput;
+ import edu.washington.bugisolation.input.HunksInput;
+-import edu.washington.bugisolation.input.LinesInput;
+ import edu.washington.bugisolation.project.Project;
+ import edu.washington.bugisolation.project.ProjectInfo;
+ import edu.washington.bugisolation.util.Utils;
+-import edu.washington.cs.dericp.diffutils.Diff;
+ import edu.washington.cs.dericp.diffutils.Hunk;
+ import edu.washington.cs.dericp.diffutils.UnifiedDiff;
+ 
+@@ -62,7 +60,7 @@ public class DeltaDebugging {
+         List<List<T>> subSets = new LinkedList<List<T>>();
+         int start = 0;
+ 
+-        for (int i = 0; i < numSubsets; i++) {
++        for (int i = 0; i <= numSubsets; i++) {
+             List<T> subSet = list.subList(start, start + (list.size() - start)
+                     / (numSubsets - i));
+             subSets.add(subSet);
+@@ -85,10 +83,10 @@ public class DeltaDebugging {
+                 + " elements");
+ 
+         boolean result = false;
++        int insertChange = 1;
+ 
+-        if (!input.getCircumstances().isEmpty()) {
+-
+-            // remove the irrelevant hunks
++        if (input.getCircumstances().isEmpty()) {
++            // this comment should swap out with the old one.
+             input.removeElements();
+ 
+             // generate the patch
