@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * A diff denotes changes to a specific file.
  */
-public class Diff {
+class Diff {
     
     private List<String> contextInfo;
     private String filePathA;
@@ -147,5 +147,23 @@ public class Diff {
             }
         }
         return diff;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Diff)) return false;
+        
+        Diff other = (Diff) obj;
+        return contextInfo.equals(other.contextInfo)
+                && filePathA.equals(other.filePathA)
+                && filePathB.equals(other.filePathB)
+                && hunks.equals(other.hunks);
+    }
+    
+    @Override
+    public int hashCode() {
+        return contextInfo.hashCode() * filePathA.hashCode()
+                * filePathB.hashCode() * hunks.hashCode();
     }
 }

@@ -7,7 +7,7 @@ import java.util.Scanner;
 /**
  * A hunk denotes changes in a specific continuous section of code.
  */
-public class Hunk {
+class Hunk {
     
     public static final int CONTEXT_SIZE = 3;
     
@@ -180,6 +180,33 @@ public class Hunk {
      */
     public void modifyRevisedLineNumber(int change) {
         revisedLineNumber = revisedLineNumber + change;
+    }
+    
+    @Override
+    public boolean equals (Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Hunk)) return false;
+        
+        Hunk other = (Hunk) obj;
+        return originalHunkLines.equals(other.originalHunkLines)
+                && modifiedLines.equals(other.modifiedLines)
+                && originalLineNumber == other.originalLineNumber
+                && originalHunkSize == other.originalHunkSize
+                && revisedLineNumber == other.revisedLineNumber
+                && revisedHunkSize == other.revisedHunkSize
+                && fileNameInfo.equals(other.fileNameInfo);
+    }
+    
+    @Override
+    public int hashCode() {
+        return originalHunkLines.hashCode()
+                * modifiedLines.hashCode()
+                * originalLineNumber
+                * originalHunkSize
+                * revisedHunkSize
+                * revisedLineNumber
+                * revisedHunkSize
+                * fileNameInfo.hashCode();
     }
 }
 

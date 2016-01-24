@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A unified diff denotes all changes to a project across multiple files.
+ * A UnifiedDiff represents a unified diff.
  */
 public class UnifiedDiff {
     
@@ -14,8 +14,18 @@ public class UnifiedDiff {
     public static final String DIFF_SPLIT = "diff";
     private List<Diff> diffs;
     
+    
     /**
-     * Constructs a new unified diff.
+     * Constructs a UnifiedDiff object from the specified unified diff at
+     * the relative filepath relFilePath.
+     * @param relFilePath
+     */
+    public UnifiedDiff(String relFilePath) {
+        this(Utils.fileToLines(relFilePath));
+    }
+    
+    /**
+     * Constructs a UnifiedDiff with the specified diff file lines.
      * 
      * @param unifiedDiffLines  the lines of the unified diff
      */
@@ -24,30 +34,21 @@ public class UnifiedDiff {
     }
     
     /**
-     * Constructs a new unified diff.
+     * Constructs a UnifiedDiff that is a copy of unifiedDiff.
      * 
-     * @param filePath  the file path of the unified diff
+     * @param other is the unified diff to be copied
      */
-    public UnifiedDiff(String filePath) {
-        this(Utils.fileToLines(filePath)); 
-    }
-    
-    /**
-     * Constructs a copy of a unified diff in a new instance.
-     * 
-     * @param other     the unified diff to be copied
-     */
-    public UnifiedDiff(UnifiedDiff other) {
+    public UnifiedDiff(UnifiedDiff unifiedDiff) {
         diffs = new ArrayList<Diff>();
-        for (Diff diff : other.diffs) {
+        for (Diff diff : unifiedDiff.diffs) {
             diffs.add(new Diff(diff));
         }
     }
     
     /**
-     * Reads in the diffs of a unified diff.
+     * Reads in the lines of a unified diff.
      * 
-     * @param unifiedDiffLines  the lines of the unified diff
+     * @param unifiedDiffLines are the lines of the unified diff
      */
     private void readDiffs(List<String> unifiedDiffLines) {
         diffs = new ArrayList<Diff>();
@@ -56,8 +57,9 @@ public class UnifiedDiff {
         }
         
         Iterator<String> iter = unifiedDiffLines.iterator();
-        String line = iter.next();
         
+        // TODO this fence-post has potential to be very buggy
+        String line = iter.next();
         while (iter.hasNext()) {
             if (line.startsWith(DIFF_SPLIT)) {
                 List<String> diffLines = new ArrayList<String>();
@@ -82,29 +84,33 @@ public class UnifiedDiff {
     }
     
     /**
-     * Gets the diffs of the unified diff.
+     * Returns the diffs that compose this unified diff.
      * 
-     * @return  the diffs of the unified diff
+     * @return the diffs of the unified diff
      */
     public List<Diff> getDiffs() {
         return diffs;
     }
     
     /**
-     * Removes a diff from the unified diff. Sets the index of the diff
-     * in the list of diffs to null.
+     * Removes a diff from the unified diff. Conceptually, this method undoes
+     * all the changes in an entire file from the unified diff.
      * 
-     * @param diffNumber    the index of the diff to be removed
+     * @param diffNumber is the zero-based index of the diff to be removed
      */
     public void removeDiff(int diffNumber) {
+        // Currently implemented as setting the diff in diffs to null since
+        // it is beneficial to know how many diffs the unified diff started
+        // with.
         diffs.set(diffNumber, null);
     }
     
     /**
-     * Removes a hunk from a diff. Sets the index of the hunk to null.
+     * Removes a hunk from the unified diff. Conceptually, this
+     * method undoes all the changes in an entire hunk.
      * 
-     * @param diffNumber    the index of the relevant diff
-     * @param hunkNumber    the index of the hunk to be removed
+     * @param diffNumber is the zero-based index of the specified diff
+     * @param hunkNumber is the zero-based index of the hunk to be removed
      */
     public void removeHunk(int diffNumber, int hunkNumber) {
         List<Hunk> hunks = diffs.get(diffNumber).getHunks();
@@ -117,12 +123,14 @@ public class UnifiedDiff {
     }
     
     /**
-     * Removes a change from a hunk.
+     * Removes a change in the unified diff. Conceptually, this undoes a single
+     * change in a hunk.
      * 
-     * @param diffNumber    the index of the relevant diff
-     * @param hunkNumber    the index of the relevant hunk
-     * @param lineNumber    the index of the line in the list of
-     *                      modified lines to be removed
+     * @param diffNumber is the zero-based index of the diff that the change
+     *                   is contained in
+     * @param hunkNumber is the zero-based index of the hunk that the change
+     *                   is contained in
+     * @param lineNumber is the zero-based index of the line number 
      */
     public void removeChangeFromHunk(int diffNumber, int hunkNumber, int lineNumber) {
         List<Hunk> hunks = diffs.get(diffNumber).getHunks();
@@ -154,5 +162,20 @@ public class UnifiedDiff {
             export.addAll(diff.diffToLines());
         }
         Utils.linesToFile(export, filePath);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof UnifiedDiff)) return false;
+        
+        UnifiedDiff other = (UnifiedDiff) obj;
+        
+        return (diffs.equals(other.diffs));
+    }
+    
+    @Override
+    public int hashCode() {
+        return diffs.hashCode();
     }
 }
