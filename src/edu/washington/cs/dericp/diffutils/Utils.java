@@ -24,10 +24,10 @@ public class Utils {
      * @return              a List of Strings, containing the information of the file
      *                      at the designated file-path
      */
-    public static List<String> fileToLines(String relFilePath) {
+    public static List<String> fileToLines(String filePath) {
         List<String> lines = new ArrayList<String>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(relFilePath));
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
             while (reader.ready()) {
                 lines.add(reader.readLine());
             }
@@ -46,9 +46,9 @@ public class Utils {
      * @param filePath      a String, the path of the file on the machine
      * @return
      */
-    public static void linesToFile(List<String> fileLines, String relFilePath) {
+    public static void linesToFile(List<String> fileLines, String filePath) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(relFilePath));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
             Iterator<String> lineIter = fileLines.iterator();
             if (lineIter.hasNext()) {
                 writer.write(lineIter.next());

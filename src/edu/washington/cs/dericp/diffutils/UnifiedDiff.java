@@ -17,17 +17,17 @@ public class UnifiedDiff {
     
     /**
      * Constructs a UnifiedDiff object from the specified unified diff at
-     * the relative filepath relFilePath.
-     * @param relFilePath
+     * the specified filepath
+     * @param filePath is the filepath, relative or absolute, of the diff
      */
-    public UnifiedDiff(String relFilePath) {
-        this(Utils.fileToLines(relFilePath));
+    public UnifiedDiff(String filePath) {
+        this(Utils.fileToLines(filePath));
     }
     
     /**
      * Constructs a UnifiedDiff with the specified diff file lines.
      * 
-     * @param unifiedDiffLines  the lines of the unified diff
+     * @param unifiedDiffLines are the lines of the unified diff
      */
     public UnifiedDiff(List<String> unifiedDiffLines) {
         readDiffs(unifiedDiffLines);
