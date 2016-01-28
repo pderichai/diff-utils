@@ -178,16 +178,25 @@ public class UnifiedDiff {
     }
     
     /**
+     * Exports the unified diff as a List of Strings.
+     * 
+     * @return a list of strings that are the lines of the unified diff
+     */
+    public List<String> exportPatchToLines() {
+        List<String> export = new ArrayList<String>();
+        for (Diff diff : diffs) {
+            export.addAll(diff.diffToLines());
+        }
+        return export;
+    }
+    
+    /**
      * Exports the unified diff to a file.
      * 
      * @param filePath  the file path where the unified diff will be exported
      */
     public void exportUnifiedDiff(String filePath) {
-        List<String> export = new ArrayList<String>();
-        for (Diff diff : diffs) {
-            export.addAll(diff.diffToLines());
-        }
-        Utils.linesToFile(export, filePath);
+        Utils.linesToFile(exportPatchToLines(), filePath);
     }
     
     @Override
