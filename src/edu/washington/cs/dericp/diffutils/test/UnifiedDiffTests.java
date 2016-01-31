@@ -22,10 +22,16 @@ public class UnifiedDiffTests {
 
     @Test
     public void testConstructor() {
-        UnifiedDiff unifiedDiff1 = new UnifiedDiff(TEST_DIFF_2);
-        unifiedDiff1.exportUnifiedDiff(TEST_DIFF_2_OUT);
-        List<String> diffLines1 = Utils.fileToLines(TEST_DIFF_2);
-        List<String> diffLines1Out = Utils.fileToLines(TEST_DIFF_2_OUT);
+        UnifiedDiff unifiedDiff1 = new UnifiedDiff(TEST_DIFF_1);
+        unifiedDiff1.exportUnifiedDiff(TEST_DIFF_1_OUT);
+        List<String> diffLines1 = Utils.fileToLines(TEST_DIFF_1);
+        List<String> diffLines1Out = Utils.fileToLines(TEST_DIFF_1_OUT);
         assertEquals(diffLines1, diffLines1Out);
+        
+        UnifiedDiff unifiedDiff2 = new UnifiedDiff(TEST_DIFF_2);
+        unifiedDiff2.exportUnifiedDiff(TEST_DIFF_2_OUT);
+        List<String> diffLines2 = Utils.fileToLines(TEST_DIFF_2);
+        List<String> diffLines2Out = Utils.fileToLines(TEST_DIFF_2_OUT);
+        assertEquals(diffLines2, diffLines2Out);
     }
 }

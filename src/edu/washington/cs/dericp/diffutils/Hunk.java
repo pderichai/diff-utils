@@ -12,6 +12,12 @@ import java.util.Scanner;
  */
 class Hunk {
     
+    // Structure of a hunk:
+    //     getContextInfo()
+    //     getStartContext()
+    //     modifiedLines
+    //     getEndContext()
+    
     // TODO make this a parameter for the construction of a hunk
     public static final int CONTEXT_SIZE = 3;
     

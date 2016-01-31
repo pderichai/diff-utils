@@ -11,11 +11,20 @@ import java.util.List;
  */
 class Diff {
     
+    // Structure of a diff:
+    //     contextInfo
+    //     originalDiffPath
+    //     revisedDiffPath
+    //     hunk 1
+    //     hunk 2
+    //     ...
+    //     hunk n
+    
     // all the information above the two relative relative paths in a diff
     private List<String> contextInfo;
     
-    private String relPathA;
-    private String relPathB;
+    private String originalDiffPath;
+    private String revisedDiffPath;
     private List<Hunk> hunks;
     
     /**
@@ -38,8 +47,8 @@ class Diff {
         for (String info : diff.contextInfo) {
             contextInfo.add(info);
         }
-        relPathA = diff.relPathA;
-        relPathB = diff.relPathB;
+        originalDiffPath = diff.originalDiffPath;
+        revisedDiffPath = diff.revisedDiffPath;
         hunks = new ArrayList<Hunk>();
         for (Hunk hunk : diff.hunks) {
             if (hunk == null) {
@@ -74,8 +83,8 @@ class Diff {
         for (Iterator<String> iter = diffLines.iterator(); iter.hasNext();) {
             String line = iter.next();
             if (line.startsWith("---")) {
-                relPathA = line;
-                relPathB = iter.next();
+                originalDiffPath = line;
+                revisedDiffPath = iter.next();
                 break;
             }
             contextInfo.add(line);
@@ -134,9 +143,9 @@ class Diff {
      *          the pathname of the original file and the pathname
      *          of the revised file, will be set in this Diff
      */
-    public void setFilePaths(String relPathA, String relPathB) {
-        this.relPathA = "--- a/" + relPathA;
-        this.relPathB = "+++ b/" + relPathB;
+    public void setFilePaths(String originalRelPath, String revisedRelPath) {
+        this.originalDiffPath = "--- a/" + originalRelPath;
+        this.revisedDiffPath = "+++ b/" + originalRelPath;
     }
     
     /**
@@ -147,8 +156,8 @@ class Diff {
     public List<String> diffToLines() {
         List<String> diff = new ArrayList<String>();
         diff.addAll(contextInfo);
-        diff.add(relPathA);
-        diff.add(relPathB);
+        diff.add(originalDiffPath);
+        diff.add(revisedDiffPath);
         for (Hunk hunk : hunks) {
             if (hunk != null) {
                 diff.addAll(hunk.hunkToLines());
@@ -164,15 +173,15 @@ class Diff {
         
         Diff other = (Diff) obj;
         return contextInfo.equals(other.contextInfo)
-                && relPathA.equals(other.relPathA)
-                && relPathB.equals(other.relPathB)
+                && originalDiffPath.equals(other.originalDiffPath)
+                && revisedDiffPath.equals(other.revisedDiffPath)
                 && hunks.equals(other.hunks);
     }
     
     @Override
     public int hashCode() {
-        return contextInfo.hashCode() * relPathA.hashCode()
-                * relPathB.hashCode() * hunks.hashCode();
+        return contextInfo.hashCode() * originalDiffPath.hashCode()
+                * revisedDiffPath.hashCode() * hunks.hashCode();
     }
     
     @Override
@@ -182,9 +191,9 @@ class Diff {
             sb.append(line);
             sb.append(System.lineSeparator());
         }
-        sb.append(relPathA);
+        sb.append(originalDiffPath);
         sb.append(System.lineSeparator());
-        sb.append(relPathB);
+        sb.append(revisedDiffPath);
         for (Hunk hunk : hunks) {
             sb.append(System.lineSeparator());
             sb.append(hunk.toString());

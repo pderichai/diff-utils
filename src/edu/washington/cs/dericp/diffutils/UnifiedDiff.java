@@ -11,6 +11,12 @@ import java.util.List;
  */
 public class UnifiedDiff {
     
+    // Structure of a unified diff:
+    //     Diff 1
+    //     Diff 2
+    //     ...
+    //     Diff n
+    
     // This field changes depending on what signifies a new diff.
     // In some formats, this could be "diff", and in others, "---".
     public static final String DIFF_SPLIT = "diff";
