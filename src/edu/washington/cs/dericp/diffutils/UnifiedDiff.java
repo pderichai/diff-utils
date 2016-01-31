@@ -239,7 +239,6 @@ public class UnifiedDiff {
         if (!(obj instanceof UnifiedDiff)) return false;
         
         UnifiedDiff other = (UnifiedDiff) obj;
-        
         return (diffs.equals(other.diffs));
     }
     

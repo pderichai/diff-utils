@@ -172,10 +172,10 @@ class Diff {
         if (!(obj instanceof Diff)) return false;
         
         Diff other = (Diff) obj;
-        return contextInfo.equals(other.contextInfo)
-                && originalDiffPath.equals(other.originalDiffPath)
-                && revisedDiffPath.equals(other.revisedDiffPath)
-                && hunks.equals(other.hunks);
+        return contextInfo.equals(other.contextInfo) &&
+                originalDiffPath.equals(other.originalDiffPath) &&
+                revisedDiffPath.equals(other.revisedDiffPath) &&
+                hunks.equals(other.hunks);
     }
     
     @Override
