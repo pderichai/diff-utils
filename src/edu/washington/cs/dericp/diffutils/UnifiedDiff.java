@@ -217,7 +217,9 @@ public class UnifiedDiff {
     public List<String> exportUnifiedDiffToLines() {
         List<String> export = new ArrayList<String>();
         for (Diff diff : diffs) {
-            export.addAll(diff.diffToLines());
+            if (diff != null) {
+                export.addAll(diff.diffToLines());
+            }
         }
         return export;
     }
