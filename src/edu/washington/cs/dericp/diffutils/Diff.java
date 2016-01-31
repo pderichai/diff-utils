@@ -5,49 +5,43 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A diff denotes changes to a specific file.
+ * This class represents a diff which denotes all changes to a single file.
+ * A unified diff is composed of one or more diffs, and a diff is composed
+ * of one or more hunks.
  */
 class Diff {
     
+    // all the information above the two relative relative paths in a diff
     private List<String> contextInfo;
-    private String filePathA;
-    private String filePathB;
+    
+    private String relPathA;
+    private String relPathB;
     private List<Hunk> hunks;
     
     /**
-     * Constructs a new diff.
+     * Constructs a new Diff with the specified diffLines.
      * 
-     * @param diffLines     the lines of the diff
+     * @param diffLines is a list of the lines of the diff
      */
     public Diff(List<String> diffLines) {
         setContextInfo(diffLines);
-        readHunks(diffLines);
-    }
-    
-    
-    /**
-     * Constructs a diff from a file at a given file path
-     * 
-     * @param filePath  the file path of the diff file
-     */
-    public Diff(String filePath) {
-        this(Utils.fileToLines(filePath));
+        setHunks(diffLines);
     }
     
     /**
-     * Constructs a copy of a diff in a new instance.
+     * Constructs a new Diff that is a copy of the specified Diff.
      * 
-     * @param other     the diff that is to be copied
+     * @param diff is the Diff to be copied
      */
-    public Diff(Diff other) {
+    public Diff(Diff diff) {
         contextInfo = new ArrayList<String>();
-        for (String info : other.contextInfo) {
+        for (String info : diff.contextInfo) {
             contextInfo.add(info);
         }
-        filePathA = other.filePathA;
-        filePathB = other.filePathB;
+        relPathA = diff.relPathA;
+        relPathB = diff.relPathB;
         hunks = new ArrayList<Hunk>();
-        for (Hunk hunk : other.hunks) {
+        for (Hunk hunk : diff.hunks) {
             if (hunk == null) {
                 hunks.add(null);
             } else {
@@ -57,26 +51,31 @@ class Diff {
     }
     
     /**
-     * Gets the hunks of this diff.
+     * Gets the hunks of this Diff.
      * 
-     * @return  the hunks of this diff
+     * @return a list of the Hunks of this Diff
      */
     public List<Hunk> getHunks() {
         return hunks;
     }
     
     /**
-     * Sets the context info of the diff
+     * Sets the context info of this Diff.
      * 
-     * @param diffLines     the lines of the diff
+     * @param diffLines is a list of the lines of the diff
+     * @requires diffLines != null
+     * @modifies this
+     * @effects the context information (essentially all the information
+     *          before the first hunk) will be set to the diff context
+     *          information found in diffLines
      */
     private void setContextInfo(List<String> diffLines) {
         contextInfo = new ArrayList<String>();
         for (Iterator<String> iter = diffLines.iterator(); iter.hasNext();) {
             String line = iter.next();
             if (line.startsWith("---")) {
-                filePathA = line;
-                filePathB = iter.next();
+                relPathA = line;
+                relPathB = iter.next();
                 break;
             }
             contextInfo.add(line);
@@ -84,11 +83,14 @@ class Diff {
     }
     
     /**
-     * Reads in the hunks of the diff
+     * Sets the hunks of this Diff.
      * 
-     * @param diffLines     the lines of the diff
+     * @param diffLines is a list of the lines of the diff
+     * @requires diffLines != null
+     * @modifies this
+     * @effects the hunks of this Diff will be set
      */
-    private void readHunks(List<String> diffLines) {
+    private void setHunks(List<String> diffLines) {
         hunks = new ArrayList<Hunk>();
         if (diffLines.isEmpty()) {
             throw new IllegalArgumentException("Diff is empty");
@@ -123,24 +125,30 @@ class Diff {
     /**
      * Sets the file paths that the diff will be applied to.
      * 
-     * @param filePathA     the first file path
-     * @param filePathB     the second file path
+     * @param relPathA is the relative path of the original file
+     * @param relPathB is the relative path of the revised file
+     * @requires relPathA != null
+     *           relPathB != null
+     * @modifies this
+     * @effects the two pathnames that this diff affects, namely
+     *          the pathname of the original file and the pathname
+     *          of the revised file, will be set in this Diff
      */
-    public void setFilePaths(String filePathA, String filePathB) {
-        this.filePathA = "--- a/" + filePathA;
-        this.filePathB = "+++ b/" + filePathB;
+    public void setFilePaths(String relPathA, String relPathB) {
+        this.relPathA = "--- a/" + relPathA;
+        this.relPathB = "+++ b/" + relPathB;
     }
     
     /**
-     * Returns this diff as a List of Strings.
+     * Returns this Diff as a List of Strings.
      * 
-     * @return      the lines of the diff
+     * @return a List of Strings that represents the lines of this Diff
      */
     public List<String> diffToLines() {
         List<String> diff = new ArrayList<String>();
         diff.addAll(contextInfo);
-        diff.add(filePathA);
-        diff.add(filePathB);
+        diff.add(relPathA);
+        diff.add(relPathB);
         for (Hunk hunk : hunks) {
             if (hunk != null) {
                 diff.addAll(hunk.hunkToLines());
@@ -156,15 +164,15 @@ class Diff {
         
         Diff other = (Diff) obj;
         return contextInfo.equals(other.contextInfo)
-                && filePathA.equals(other.filePathA)
-                && filePathB.equals(other.filePathB)
+                && relPathA.equals(other.relPathA)
+                && relPathB.equals(other.relPathB)
                 && hunks.equals(other.hunks);
     }
     
     @Override
     public int hashCode() {
-        return contextInfo.hashCode() * filePathA.hashCode()
-                * filePathB.hashCode() * hunks.hashCode();
+        return contextInfo.hashCode() * relPathA.hashCode()
+                * relPathB.hashCode() * hunks.hashCode();
     }
     
     @Override
@@ -174,9 +182,9 @@ class Diff {
             sb.append(line);
             sb.append(System.lineSeparator());
         }
-        sb.append(filePathA);
+        sb.append(relPathA);
         sb.append(System.lineSeparator());
-        sb.append(filePathB);
+        sb.append(relPathB);
         for (Hunk hunk : hunks) {
             sb.append(System.lineSeparator());
             sb.append(hunk.toString());

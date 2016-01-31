@@ -11,23 +11,23 @@ import java.util.List;
 
 
 /**
- * Utility functions that are used throughout diff-utils.
+ * This class provides utility functions that are used throughout diff-utils.
  */
 public class Utils {
     
     public static final boolean DEBUG = true;
     
     /**
-     * Converts the file specified at relFilePath to a list of strings.
+     * Converts the file specified at pathname to a list of strings.
      * 
-     * @param filePath      a String, the path of the file on the machine
-     * @return              a List of Strings, containing the information of the file
-     *                      at the designated file-path
+     * @param pathname      a String, the path of the file on the machine
+     * @return              a List of Strings representing the lines of the file
+     *                      at the specified pathname
      */
-    public static List<String> fileToLines(String filePath) {
+    public static List<String> fileToLines(String pathname) {
         List<String> lines = new ArrayList<String>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            BufferedReader reader = new BufferedReader(new FileReader(pathname));
             while (reader.ready()) {
                 lines.add(reader.readLine());
             }
@@ -42,13 +42,13 @@ public class Utils {
     /**
      * Converts a List of Strings to a File.
      * 
-     * @param fileLines     a List of Strings, contains the information to be output in the file
-     * @param filePath      a String, the path of the file on the machine
+     * @param fileLines are the lines of file stored as a List of Strings
+     * @param pathname is the path of the file to be created/modified
      * @return
      */
-    public static void linesToFile(List<String> fileLines, String filePath) {
+    public static void linesToFile(List<String> fileLines, String pathname) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(pathname));
             Iterator<String> lineIter = fileLines.iterator();
             if (lineIter.hasNext()) {
                 writer.write(lineIter.next());
