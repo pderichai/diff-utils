@@ -93,7 +93,7 @@ class Hunk {
         revisedLineNumber = input.nextInt();
         revisedHunkSize = input.nextInt();
         input.close();
-        fileNameInfo = contextInfo.replaceFirst("@@.*@@ ", "");
+        fileNameInfo = contextInfo.replaceFirst("@@.*@@", "").trim();
     }
     
     /**
@@ -102,11 +102,12 @@ class Hunk {
      * @return the context information of this Hunk
      */
     public String getContextInfo() {
-        return ("@@ -" + originalLineNumber + ',' + originalHunkSize
-                + " +" + revisedLineNumber + ',' + revisedHunkSize + " @@"
-                // TODO sometimes the fileNameInfo is empty. This case needs to
-                // be handled.
-                + " " + fileNameInfo);
+        String contextInfo = "@@ -" + originalLineNumber + ',' + originalHunkSize +
+                " +" + revisedLineNumber + ',' + revisedHunkSize + " @@";
+        if (!fileNameInfo.isEmpty()) {
+            contextInfo += " " + fileNameInfo;
+        }
+        return contextInfo;
     }
     
     /**
@@ -225,7 +226,7 @@ class Hunk {
      * @param change is the amount that the revised line number will be changed
      */
     public void modifyRevisedLineNumber(int change) {
-        revisedLineNumber = revisedLineNumber + change;
+        revisedLineNumber += change;
     }
     
     @Override
@@ -234,25 +235,25 @@ class Hunk {
         if (!(obj instanceof Hunk)) return false;
         
         Hunk other = (Hunk) obj;
-        return originalHunkLines.equals(other.originalHunkLines)
-                && modifiedLines.equals(other.modifiedLines)
-                && originalLineNumber == other.originalLineNumber
-                && originalHunkSize == other.originalHunkSize
-                && revisedLineNumber == other.revisedLineNumber
-                && revisedHunkSize == other.revisedHunkSize
-                && fileNameInfo.equals(other.fileNameInfo);
+        return originalHunkLines.equals(other.originalHunkLines) &&
+                modifiedLines.equals(other.modifiedLines) &&
+                originalLineNumber == other.originalLineNumber &&
+                originalHunkSize == other.originalHunkSize &&
+                revisedLineNumber == other.revisedLineNumber &&
+                revisedHunkSize == other.revisedHunkSize &&
+                fileNameInfo.equals(other.fileNameInfo);
     }
     
     @Override
     public int hashCode() {
-        return originalHunkLines.hashCode()
-                * modifiedLines.hashCode()
-                * originalLineNumber
-                * originalHunkSize
-                * revisedHunkSize
-                * revisedLineNumber
-                * revisedHunkSize
-                * fileNameInfo.hashCode();
+        return originalHunkLines.hashCode() *
+                modifiedLines.hashCode() *
+                originalLineNumber *
+                originalHunkSize *
+                revisedHunkSize *
+                revisedLineNumber *
+                revisedHunkSize *
+                fileNameInfo.hashCode();
     }
     
     @Override
