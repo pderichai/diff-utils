@@ -42,7 +42,7 @@ class Hunk {
     
     // the context information of a hunk that sits in-line next to the
     // hunk size and line number information
-    private String fileNameInfo;
+    private String filenameInfo;
     
     /**
      * Constructs a new Hunk with the specified hunk lines.
@@ -73,7 +73,7 @@ class Hunk {
         originalHunkLines.addAll(hunk.originalHunkLines);
         modifiedLines = new ArrayList<String>();
         modifiedLines.addAll(hunk.modifiedLines);
-        fileNameInfo = hunk.fileNameInfo;
+        filenameInfo = hunk.filenameInfo;
     }
     
     /**
@@ -93,7 +93,7 @@ class Hunk {
         revisedLineNumber = input.nextInt();
         revisedHunkSize = input.nextInt();
         input.close();
-        fileNameInfo = contextInfo.replaceFirst("@@.*@@", "").trim();
+        filenameInfo = contextInfo.replaceFirst("@@.*@@", "").trim();
     }
     
     /**
@@ -104,8 +104,8 @@ class Hunk {
     public String getContextInfo() {
         String contextInfo = "@@ -" + originalLineNumber + ',' + originalHunkSize +
                 " +" + revisedLineNumber + ',' + revisedHunkSize + " @@";
-        if (!fileNameInfo.isEmpty()) {
-            contextInfo += " " + fileNameInfo;
+        if (!filenameInfo.isEmpty()) {
+            contextInfo += " " + filenameInfo;
         }
         return contextInfo;
     }
@@ -241,7 +241,7 @@ class Hunk {
                 originalHunkSize == other.originalHunkSize &&
                 revisedLineNumber == other.revisedLineNumber &&
                 revisedHunkSize == other.revisedHunkSize &&
-                fileNameInfo.equals(other.fileNameInfo);
+                filenameInfo.equals(other.filenameInfo);
     }
     
     @Override
@@ -253,7 +253,7 @@ class Hunk {
                 revisedHunkSize *
                 revisedLineNumber *
                 revisedHunkSize *
-                fileNameInfo.hashCode();
+                filenameInfo.hashCode();
     }
     
     @Override
