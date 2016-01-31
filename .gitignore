@@ -151,3 +151,6 @@ tramp
 
 # cask packages
 .cask/
+
+#JUnit Generated Test Output Files
+*.out
