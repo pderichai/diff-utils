@@ -12,7 +12,7 @@ import main.edu.washington.cs.dericp.diffutils.Utils;
 
 public class UnifiedDiffTests {
     
-    public static final String TEST_DIR = "src/edu/washington/cs/dericp/diffutils/test/";
+    public static final String TEST_DIR = "src/test/edu/washington/cs/dericp/diffutils/";
     public static final String TEST_DIFF_1 = TEST_DIR + "TestDiff1.test";
     public static final String TEST_DIFF_2 = TEST_DIR + "TestDiff2.test";
     public static final String TEST_DIFF_3 = TEST_DIR + "TestDiff3.test";
