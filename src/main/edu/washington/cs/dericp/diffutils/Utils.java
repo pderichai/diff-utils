@@ -18,13 +18,14 @@ public class Utils {
     public static final boolean DEBUG = true;
     
     /**
-     * Converts the file specified at pathname to a list of strings.
+     * Reads the file at the specified pathname and returns it as a List of
+     * Strings, one per line of the file.
      * 
      * @param pathname      a String, the path of the file on the machine
      * @return              a List of Strings representing the lines of the file
      *                      at the specified pathname
      */
-    public static List<String> fileToLines(String pathname) {
+    public static List<String> readFile(String pathname) {
         List<String> lines = new ArrayList<String>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(pathname));
@@ -40,13 +41,14 @@ public class Utils {
     }
     
     /**
-     * Converts a List of Strings to a File.
+     * Writes a List of Strings, each String representing a line in the file,
+     * to the file at the specified pathname.
      * 
-     * @param fileLines are the lines of file stored as a List of Strings
+     * @param fileLines are the lines of file stored as a List of Strings, one
+     *        String per line of the file
      * @param pathname is the path of the file to be created/modified
-     * @return
      */
-    public static void linesToFile(List<String> fileLines, String pathname) {
+    public static void writeFile(List<String> fileLines, String pathname) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(pathname));
             Iterator<String> lineIter = fileLines.iterator();

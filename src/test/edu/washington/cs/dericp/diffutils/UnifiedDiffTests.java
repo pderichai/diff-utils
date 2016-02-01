@@ -34,36 +34,36 @@ public class UnifiedDiffTests {
     @Test
     public void testConstructor() {
         unifiedDiff1.exportUnifiedDiff(TEST_DIFF_1_OUT);
-        List<String> diffLines1 = Utils.fileToLines(TEST_DIFF_1);
-        List<String> diffLines1Out = Utils.fileToLines(TEST_DIFF_1_OUT);
+        List<String> diffLines1 = Utils.readFile(TEST_DIFF_1);
+        List<String> diffLines1Out = Utils.readFile(TEST_DIFF_1_OUT);
         assertEquals(diffLines1, diffLines1Out);
         
         unifiedDiff2.exportUnifiedDiff(TEST_DIFF_2_OUT);
-        List<String> diffLines2 = Utils.fileToLines(TEST_DIFF_2);
-        List<String> diffLines2Out = Utils.fileToLines(TEST_DIFF_2_OUT);
+        List<String> diffLines2 = Utils.readFile(TEST_DIFF_2);
+        List<String> diffLines2Out = Utils.readFile(TEST_DIFF_2_OUT);
         assertEquals(diffLines2, diffLines2Out);
         
         unifiedDiff3.exportUnifiedDiff(TEST_DIFF_3_OUT);
-        List<String> diffLines3 = Utils.fileToLines(TEST_DIFF_3);
-        List<String> diffLines3Out = Utils.fileToLines(TEST_DIFF_3_OUT);
+        List<String> diffLines3 = Utils.readFile(TEST_DIFF_3);
+        List<String> diffLines3Out = Utils.readFile(TEST_DIFF_3_OUT);
         assertEquals(diffLines3, diffLines3Out);
     }
     
     @Test
     public void testRemoveDiff() {
         unifiedDiff3.removeDiff(0);
-        assertEquals(unifiedDiff3.exportUnifiedDiffToLines(), Utils.fileToLines(TEST_DIR + "TestDiff3RemoveDiff(0).expected"));
+        assertEquals(unifiedDiff3.exportUnifiedDiffToLines(), Utils.readFile(TEST_DIR + "TestDiff3RemoveDiff(0).expected"));
     }
     
     @Test
     public void testRemoveHunk() {
         unifiedDiff1.removeHunk(0, 2);
-        assertEquals(unifiedDiff1.exportUnifiedDiffToLines(), Utils.fileToLines(TEST_DIR + "TestDiff1RemoveHunk(0, 2).expected"));
+        assertEquals(unifiedDiff1.exportUnifiedDiffToLines(), Utils.readFile(TEST_DIR + "TestDiff1RemoveHunk(0, 2).expected"));
     }
     
     @Test
     public void testRemoveChange() {
         unifiedDiff1.removeChange(0, 2, 0);
-        assertEquals(unifiedDiff1.exportUnifiedDiffToLines(), Utils.fileToLines(TEST_DIR + "TestDiff1RemoveChange(0, 2, 0).expected"));
+        assertEquals(unifiedDiff1.exportUnifiedDiffToLines(), Utils.readFile(TEST_DIR + "TestDiff1RemoveChange(0, 2, 0).expected"));
     }
 }

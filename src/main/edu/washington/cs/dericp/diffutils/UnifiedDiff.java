@@ -29,7 +29,7 @@ public class UnifiedDiff {
      * @param pathname is the relative or absolute pathname of the diff
      */
     public UnifiedDiff(String pathname) {
-        this(Utils.fileToLines(pathname));
+        this(Utils.readFile(pathname));
     }
     
     /**
@@ -232,7 +232,7 @@ public class UnifiedDiff {
      * @effects the file located at pathname will now be this UnifiedDiff
      */
     public void exportUnifiedDiff(String pathname) {
-        Utils.linesToFile(exportUnifiedDiffToLines(), pathname);
+        Utils.writeFile(exportUnifiedDiffToLines(), pathname);
     }
     
     @Override
