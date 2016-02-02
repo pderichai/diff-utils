@@ -11,18 +11,21 @@ import java.util.List;
  */
 class Diff {
     
+    // An actual diff denotes all the changes to a single file in the
+    // unified diff and is composed of one or more hunks. Similarly, a
+    // Diff object is a collection of Hunks which form to represent all
+    // the changes to a specified file in a unified diff.
     // Structure of a diff:
     //     contextInfo
     //     originalDiffPath
     //     revisedDiffPath
+    //     hunk 0
     //     hunk 1
-    //     hunk 2
     //     ...
     //     hunk n
     
     // all the information above the two relative relative paths in a diff
     private List<String> contextInfo;
-    
     private String originalDiffPath;
     private String revisedDiffPath;
     private List<Hunk> hunks;
@@ -71,12 +74,8 @@ class Diff {
     /**
      * Sets the context info of this Diff.
      * 
-     * @param diffLines is a list of the lines of the diff
-     * @requires diffLines != null
-     * @modifies this
-     * @effects the context information (essentially all the information
-     *          before the first hunk) will be set to the diff context
-     *          information found in diffLines
+     * @param diffLines is a non-null List of Strings that represents a diff, one
+     *        String per line of the diff
      */
     private void setContextInfo(List<String> diffLines) {
         contextInfo = new ArrayList<String>();
@@ -94,17 +93,15 @@ class Diff {
     /**
      * Sets the hunks of this Diff.
      * 
-     * @param diffLines is a list of the lines of the diff
-     * @requires diffLines != null
-     * @modifies this
-     * @effects the hunks of this Diff will be set
+     * @param diffLines is a non-null non-empty List of Strings that represents
+     *        a diff, one String per line of the diff
      */
     private void setHunks(List<String> diffLines) {
-        hunks = new ArrayList<Hunk>();
-        if (diffLines.isEmpty()) {
+        if (diffLines == null || diffLines.isEmpty()) {
             throw new IllegalArgumentException("Diff is empty");
         }
         
+        hunks = new ArrayList<Hunk>();
         Iterator<String> iter = diffLines.iterator();
         String line = iter.next();
         
@@ -134,14 +131,8 @@ class Diff {
     /**
      * Sets the file paths that the diff will be applied to.
      * 
-     * @param relPathA is the relative path of the original file
-     * @param relPathB is the relative path of the revised file
-     * @requires relPathA != null
-     *           relPathB != null
-     * @modifies this
-     * @effects the two pathnames that this diff affects, namely
-     *          the pathname of the original file and the pathname
-     *          of the revised file, will be set in this Diff
+     * @param relPathA is the non-null relative path of the original file
+     * @param relPathB is the non-null relative path of the revised file
      */
     public void setFilePaths(String originalRelPath, String revisedRelPath) {
         this.originalDiffPath = "--- a/" + originalRelPath;
@@ -151,7 +142,7 @@ class Diff {
     /**
      * Returns this Diff as a List of Strings.
      * 
-     * @return a List of Strings that represents the lines of this Diff
+     * @return a List of Strings, one String per line of this diff
      */
     public List<String> diffToLines() {
         List<String> diff = new ArrayList<String>();

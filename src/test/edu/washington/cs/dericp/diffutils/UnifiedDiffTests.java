@@ -33,17 +33,17 @@ public class UnifiedDiffTests {
     
     @Test
     public void testConstructor() {
-        unifiedDiff1.exportUnifiedDiff(TEST_DIFF_1_OUT);
+        unifiedDiff1.writeUnifiedDiff(TEST_DIFF_1_OUT);
         List<String> diffLines1 = Utils.readFile(TEST_DIFF_1);
         List<String> diffLines1Out = Utils.readFile(TEST_DIFF_1_OUT);
         assertEquals(diffLines1, diffLines1Out);
         
-        unifiedDiff2.exportUnifiedDiff(TEST_DIFF_2_OUT);
+        unifiedDiff2.writeUnifiedDiff(TEST_DIFF_2_OUT);
         List<String> diffLines2 = Utils.readFile(TEST_DIFF_2);
         List<String> diffLines2Out = Utils.readFile(TEST_DIFF_2_OUT);
         assertEquals(diffLines2, diffLines2Out);
         
-        unifiedDiff3.exportUnifiedDiff(TEST_DIFF_3_OUT);
+        unifiedDiff3.writeUnifiedDiff(TEST_DIFF_3_OUT);
         List<String> diffLines3 = Utils.readFile(TEST_DIFF_3);
         List<String> diffLines3Out = Utils.readFile(TEST_DIFF_3_OUT);
         assertEquals(diffLines3, diffLines3Out);

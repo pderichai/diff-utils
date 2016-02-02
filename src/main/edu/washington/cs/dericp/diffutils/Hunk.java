@@ -12,6 +12,9 @@ import java.util.Scanner;
  */
 class Hunk {
     
+    // Hunks are the components of a diff and can be grouped together in
+    // addition to the context information of a diff to denote all the changes
+    // to a single file in a unified diff.
     // Structure of a hunk:
     //     getContextInfo()
     //     getStartContext()
@@ -20,26 +23,19 @@ class Hunk {
     
     // TODO make this a parameter for the construction of a hunk
     public static final int CONTEXT_SIZE = 3;
-    
     // the non-abstracted lines of the hunk i.e. what can be directly parsed
     private List<String> originalHunkLines;
-    
     // all the lines exclusive of the CONTEXT_SIZE lines at the beginning
     // and end of the hunk
     private List<String> modifiedLines;
-    
     // where the hunk starts in the original file
     private int originalLineNumber;
-    
     // the size of the hunk in the original file
     private int originalHunkSize;
-    
     // where the hunk starts in the revised file
     private int revisedLineNumber;
-    
     // the size of the hunk in the revised file
     private int revisedHunkSize;
-    
     // the context information of a hunk that sits in-line next to the
     // hunk size and line number information
     private String filenameInfo;
@@ -79,11 +75,8 @@ class Hunk {
     /**
      * Sets the context information of this Hunk.
      * 
-     * @param contextInfo is the line of hunk context information that precedes
-     *                    the context lines of each hunk
-     * @modifies this
-     * @effects the context information of this Hunk will now be set to the
-     *          information specified by contextInfo
+     * @param contextInfo is the line of hunk context information will precede
+     *        the context lines of this hunk
      */
     public void setContextInfo(String contextInfo) {
         Scanner input = new Scanner(contextInfo);
@@ -115,7 +108,8 @@ class Hunk {
      * the lines of the hunk between the context lines found at the top and
      * bottom of each hunk.
      * 
-     * @return a List of Strings that are the modified lines of this Hunk
+     * @return a List of Strings that represent the modified lines of this hunk,
+     *         one String per line
      */
     public List<String> getModifiedLines() {
         return modifiedLines;
@@ -126,7 +120,8 @@ class Hunk {
      * the lines immediately following the context information in a hunk that
      * precede the modified lines.
      * 
-     * @return a List of Strings that are the start context lines of this hunk
+     * @return a List of Strings represents the context lines of this hunk, one
+     *         String per line of context
      */
     public List<String> getStartContext() {
         List<String> startContext = new ArrayList<String>();
