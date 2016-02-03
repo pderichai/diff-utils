@@ -8,21 +8,26 @@ import java.util.List;
  * This class represents a diff which denotes all changes to a single file.
  * A unified diff is composed of one or more diffs, and a diff is composed
  * of one or more hunks.
+ * 
+ * An actual diff denotes all the changes to a single file in the
+ * unified diff and is composed of one or more hunks. Similarly, a
+ * Diff object is a collection of Hunks which form to represent all
+ * the changes to a specified file in a unified diff.
+ * 
+ * Structure of a diff:
+ *     getContextInfo()
+ *     getOriginalDiffPath()
+ *     getRevisedDiffPath()
+ *     getHunks[0]
+ *     getHunks[1]
+ *     ...
+ *     getHunks[n]
+ *     
+ * Note that a Hunk has its own internal structure. Please see the related
+ * documentation at {@link main.edu.washington.cs.dericp.diffutils.Hunk}
  */
 public class Diff {
-    
-    // An actual diff denotes all the changes to a single file in the
-    // unified diff and is composed of one or more hunks. Similarly, a
-    // Diff object is a collection of Hunks which form to represent all
-    // the changes to a specified file in a unified diff.
-    // Structure of a diff:
-    //     contextInfo
-    //     originalDiffPath
-    //     revisedDiffPath
-    //     hunk 0
-    //     hunk 1
-    //     ...
-    //     hunk n
+    // TODO representation exposure needs to be removed
     
     // all the information above the two relative relative paths in a diff
     private List<String> contextInfo;
@@ -78,6 +83,7 @@ public class Diff {
      *        String per line of the diff
      */
     private void setContextInfo(List<String> diffLines) {
+        // TODO maybe this should be a list.clear()?
         contextInfo = new ArrayList<String>();
         for (Iterator<String> iter = diffLines.iterator(); iter.hasNext();) {
             String line = iter.next();
@@ -129,7 +135,7 @@ public class Diff {
     }
     
     /**
-     * Sets the file paths that the diff will be applied to.
+     * Sets the file paths that specify where the diff should be applied to.
      * 
      * @param relPathA is the non-null relative path of the original file
      * @param relPathB is the non-null relative path of the revised file
@@ -137,6 +143,27 @@ public class Diff {
     public void setFilePaths(String originalRelPath, String revisedRelPath) {
         this.originalDiffPath = "--- a/" + originalRelPath;
         this.revisedDiffPath = "+++ b/" + originalRelPath;
+    }
+    
+    /**
+     * Returns the original diff path of this Diff. The original diff path
+     * is the pathname of the file that this Diff can be applied to.
+     * 
+     * @return the original diff path of this Diff
+     */
+    public String getOriginalDiffPath() {
+        return originalDiffPath;
+    }
+    
+    /**
+     * Returns the revised diff path of this Diff. The revised diff path
+     * is the pathname of the file at {@link main.edu.washington.cs.dericp.diffutils.Diff#getOriginalDiffPath()}
+     * after this Diff is applied.
+     * 
+     * @return
+     */
+    public String getRevisedDiffPath() {
+        return revisedDiffPath;
     }
     
     /**

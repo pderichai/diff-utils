@@ -7,17 +7,21 @@ import java.util.List;
 /**
  * A UnifiedDiff represents a unified diff file. A unified diff is essentially
  * composed of one or more diffs which are composed of one or more hunks.
+ * 
+ * An actual unified diff is essentially a collection of diffs. The structure
+ * of a unified diff can be though of as:
+ * 
+ * UnifiedDiff
+ *     getDiffs [0]
+ *     getDiffs [1]
+ *     ...
+ *     getDiffs [n]
+ *     
+ * Note that a Diff has its own internal structure. Please see the
+ * related documentation in the {@link main.edu.washington.cs.dericp.diffutils.Diff}.
  */
 public class UnifiedDiff {
-    
-    // An actual unified diff is essentially a collection of diffs. Similarly,
-    // a UnifiedDiff object is a collection of Diff objects. A UnifiedDiff maps
-    // to the concrete value of a unified diff in the following way:
-    // UnifiedDiff:
-    //     Diff 0
-    //     Diff 1
-    //     ...
-    //     Diff n
+    // TODO representation exposure needs to be removed
     
     // This field changes depending on what signifies a new diff.
     // In some formats, this could be "diff", and in others, "---".

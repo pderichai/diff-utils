@@ -9,17 +9,19 @@ import java.util.Scanner;
  * of code. As long as changes are within a certain context size of each other,
  * they can be considered in the same hunk. Each diff is composed of one or
  * more hunks.
+ * 
+ * Hunks are the components of a diff and can be grouped together in
+ * addition to the context information of a diff to denote all the changes
+ * to a single file in a unified diff.
+ * 
+ * Structure of a hunk:
+ *     getContextInfo()
+ *     getStartContext()
+ *     getModifiedLines()
+ *     getEndContext()
  */
 public class Hunk {
-    
-    // Hunks are the components of a diff and can be grouped together in
-    // addition to the context information of a diff to denote all the changes
-    // to a single file in a unified diff.
-    // Structure of a hunk:
-    //     getContextInfo()
-    //     getStartContext()
-    //     modifiedLines
-    //     getEndContext()
+    // TODO representation exposure needs to be removed
     
     // TODO make this a parameter for the construction of a hunk
     public static final int CONTEXT_SIZE = 3;
