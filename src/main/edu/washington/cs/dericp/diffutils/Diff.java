@@ -9,7 +9,7 @@ import java.util.List;
  * A unified diff is composed of one or more diffs, and a diff is composed
  * of one or more hunks.
  */
-class Diff {
+public class Diff {
     
     // An actual diff denotes all the changes to a single file in the
     // unified diff and is composed of one or more hunks. Similarly, a

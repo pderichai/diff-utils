@@ -10,7 +10,7 @@ import java.util.Scanner;
  * they can be considered in the same hunk. Each diff is composed of one or
  * more hunks.
  */
-class Hunk {
+public class Hunk {
     
     // Hunks are the components of a diff and can be grouped together in
     // addition to the context information of a diff to denote all the changes
