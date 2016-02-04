@@ -137,8 +137,8 @@ public class Diff {
     /**
      * Sets the file paths that specify where the diff should be applied to.
      * 
-     * @param relPathA is the non-null relative path of the original file
-     * @param relPathB is the non-null relative path of the revised file
+     * @param originalRelPath is the non-null relative path of the original file
+     * @param revisedRelPath is the non-null relative path of the revised file
      */
     public void setFilePaths(String originalRelPath, String revisedRelPath) {
         this.originalDiffPath = "--- a/" + originalRelPath;
@@ -160,7 +160,7 @@ public class Diff {
      * is the pathname of the file at {@link main.edu.washington.cs.dericp.diffutils.Diff#getOriginalDiffPath()}
      * after this Diff is applied.
      * 
-     * @return
+     * @return the revised diff path of this Diff
      */
     public String getRevisedDiffPath() {
         return revisedDiffPath;
