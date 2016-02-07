@@ -10,7 +10,7 @@ index 419e3eb..f040dd9 100644
  import edu.washington.bugisolation.project.Project;
  import edu.washington.bugisolation.project.ProjectInfo;
  import edu.washington.bugisolation.util.Utils;
--import edu.washington.cs.dericp.diffutils.Diff;
+-import edu.washington.cs.dericp.diffutils.SingleFileUnifiedDiff;
  import edu.washington.cs.dericp.diffutils.Hunk;
  import edu.washington.cs.dericp.diffutils.Patch;
  

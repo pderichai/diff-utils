@@ -11,7 +11,7 @@ import java.util.List;
  * 
  * An actual diff denotes all the changes to a single file in the
  * unified diff and is composed of one or more hunks. Similarly, a
- * Diff object is a collection of Hunks which form to represent all
+ * SingleFileUnifiedDiff object is a collection of Hunks which form to represent all
  * the changes to a specified file in a unified diff.
  * 
  * Structure of a diff:
@@ -26,7 +26,7 @@ import java.util.List;
  * Note that a Hunk has its own internal structure. Please see the related
  * documentation at {@link Hunk}
  */
-public class Diff {
+public class SingleFileUnifiedDiff {
     // TODO representation exposure needs to be removed
     
     // all the information above the two relative relative paths in a diff
@@ -36,21 +36,21 @@ public class Diff {
     private List<Hunk> hunks;
     
     /**
-     * Constructs a new Diff with the specified diffLines.
+     * Constructs a new SingleFileUnifiedDiff with the specified diffLines.
      * 
      * @param diffLines is a list of the lines of the diff
      */
-    public Diff(List<String> diffLines) {
+    public SingleFileUnifiedDiff(List<String> diffLines) {
         setContextInfo(diffLines);
         setHunks(diffLines);
     }
     
     /**
-     * Constructs a new Diff that is a copy of the specified Diff.
+     * Constructs a new SingleFileUnifiedDiff that is a copy of the specified SingleFileUnifiedDiff.
      * 
-     * @param diff is the Diff to be copied
+     * @param diff is the SingleFileUnifiedDiff to be copied
      */
-    public Diff(Diff diff) {
+    public SingleFileUnifiedDiff(SingleFileUnifiedDiff diff) {
         contextInfo = new ArrayList<String>();
         for (String info : diff.contextInfo) {
             contextInfo.add(info);
@@ -68,16 +68,16 @@ public class Diff {
     }
     
     /**
-     * Gets the hunks of this Diff.
+     * Gets the hunks of this SingleFileUnifiedDiff.
      * 
-     * @return a list of the Hunks of this Diff
+     * @return a list of the Hunks of this SingleFileUnifiedDiff
      */
     public List<Hunk> getHunks() {
         return hunks;
     }
     
     /**
-     * Sets the context info of this Diff.
+     * Sets the context info of this SingleFileUnifiedDiff.
      * 
      * @param diffLines is a non-null List of Strings that represents a diff, one
      *        String per line of the diff
@@ -97,14 +97,14 @@ public class Diff {
     }
     
     /**
-     * Sets the hunks of this Diff.
+     * Sets the hunks of this SingleFileUnifiedDiff.
      * 
      * @param diffLines is a non-null non-empty List of Strings that represents
      *        a diff, one String per line of the diff
      */
     private void setHunks(List<String> diffLines) {
         if (diffLines == null || diffLines.isEmpty()) {
-            throw new IllegalArgumentException("Diff is empty");
+            throw new IllegalArgumentException("SingleFileUnifiedDiff is empty");
         }
         
         hunks = new ArrayList<Hunk>();
@@ -123,7 +123,7 @@ public class Diff {
                     line = iter.next();
                 }
                 
-                // if last line of Diff
+                // if last line of SingleFileUnifiedDiff
                 if (!iter.hasNext()) {
                     hunkLines.add(line);
                 }
@@ -146,28 +146,28 @@ public class Diff {
     }
     
     /**
-     * Returns the original diff path of this Diff. The original diff path
-     * is the pathname of the file that this Diff can be applied to.
+     * Returns the original diff path of this SingleFileUnifiedDiff. The original diff path
+     * is the pathname of the file that this SingleFileUnifiedDiff can be applied to.
      * 
-     * @return the original diff path of this Diff
+     * @return the original diff path of this SingleFileUnifiedDiff
      */
     public String getOriginalDiffPath() {
         return originalDiffPath;
     }
     
     /**
-     * Returns the revised diff path of this Diff. The revised diff path
-     * is the pathname of the file at {@link Diff#getOriginalDiffPath()}
-     * after this Diff is applied.
+     * Returns the revised diff path of this SingleFileUnifiedDiff. The revised diff path
+     * is the pathname of the file at {@link SingleFileUnifiedDiff#getOriginalDiffPath()}
+     * after this SingleFileUnifiedDiff is applied.
      * 
-     * @return the revised diff path of this Diff
+     * @return the revised diff path of this SingleFileUnifiedDiff
      */
     public String getRevisedDiffPath() {
         return revisedDiffPath;
     }
     
     /**
-     * Returns this Diff as a List of Strings.
+     * Returns this SingleFileUnifiedDiff as a List of Strings.
      * 
      * @return a List of Strings, one String per line of this diff
      */
@@ -187,9 +187,9 @@ public class Diff {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof Diff)) return false;
+        if (!(obj instanceof SingleFileUnifiedDiff)) return false;
         
-        Diff other = (Diff) obj;
+        SingleFileUnifiedDiff other = (SingleFileUnifiedDiff) obj;
         return contextInfo.equals(other.contextInfo) &&
                 originalDiffPath.equals(other.originalDiffPath) &&
                 revisedDiffPath.equals(other.revisedDiffPath) &&

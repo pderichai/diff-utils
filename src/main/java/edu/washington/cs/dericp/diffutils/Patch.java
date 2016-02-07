@@ -17,8 +17,8 @@ import java.util.List;
  *     ...
  *     getDiffs [n].
  *     
- * Note that a Diff has its own internal structure. Please see the
- * related documentation in the {@link Diff}.
+ * Note that a SingleFileUnifiedDiff has its own internal structure. Please see the
+ * related documentation in the {@link SingleFileUnifiedDiff}.
  */
 public class Patch {
     // TODO representation exposure needs to be removed
@@ -27,7 +27,7 @@ public class Patch {
     // In some formats, this could be "diff", and in others, "---".
     // TODO if necessary, turn this into a field that can be set in the constructor
     private String diffSplit = "diff";
-    private List<Diff> diffs;
+    private List<SingleFileUnifiedDiff> diffs;
     
     /**
      * Constructs a Patch object from the unified diff at the
@@ -54,9 +54,9 @@ public class Patch {
      * @param patch is the Patch to be copied
      */
     public Patch(Patch patch) {
-        diffs = new ArrayList<Diff>();
-        for (Diff diff : patch.diffs) {
-            diffs.add(new Diff(diff));
+        diffs = new ArrayList<SingleFileUnifiedDiff>();
+        for (SingleFileUnifiedDiff diff : patch.diffs) {
+            diffs.add(new SingleFileUnifiedDiff(diff));
         }
     }
     
@@ -69,10 +69,10 @@ public class Patch {
      */
     private void parseDiffLines(List<String> unifiedDiffLines) {
         if (unifiedDiffLines == null || unifiedDiffLines.isEmpty()) {
-            throw new IllegalArgumentException("Diff is empty");
+            throw new IllegalArgumentException("SingleFileUnifiedDiff is empty");
         }
         
-        diffs = new ArrayList<Diff>();
+        diffs = new ArrayList<SingleFileUnifiedDiff>();
         Iterator<String> iter = unifiedDiffLines.iterator();
         String currentLine = null;
         if (iter.hasNext()) {
@@ -84,7 +84,7 @@ public class Patch {
                 diffLines.add(currentLine);
                 currentLine = iter.next();
                 
-                // constructing a new Diff
+                // constructing a new SingleFileUnifiedDiff
                 while (!currentLine.startsWith(diffSplit) && iter.hasNext()) {
                     diffLines.add(currentLine);
                     currentLine = iter.next();
@@ -94,8 +94,8 @@ public class Patch {
                     diffLines.add(currentLine);
                 }
                 
-                // adding the newly constructed Diff to this Patch
-                diffs.add(new Diff(diffLines));
+                // adding the newly constructed SingleFileUnifiedDiff to this Patch
+                diffs.add(new SingleFileUnifiedDiff(diffLines));
             } else {
                 currentLine = iter.next();
             }
@@ -107,7 +107,7 @@ public class Patch {
      * 
      * @return a list of Diffs that compose this Patch
      */
-    public List<Diff> getDiffs() {
+    public List<SingleFileUnifiedDiff> getDiffs() {
         return diffs;
     }
     
@@ -118,7 +118,7 @@ public class Patch {
      * @param diffNumber is the zero-based index of the diff to be removed
      */
     public void removeDiff(int diffNumber) {
-        // Currently implemented as setting the Diff in diffs to null since
+        // Currently implemented as setting the SingleFileUnifiedDiff in diffs to null since
         // it is beneficial to know how many Diffs the Patch started
         // with.
         if (diffNumber < diffs.size()) {
@@ -154,7 +154,7 @@ public class Patch {
      */
     public void removeChange(String diffLine) {
         for (int diffNum = 0; diffNum < diffs.size(); diffNum++) {
-            Diff currentDiff = diffs.get(diffNum);
+            SingleFileUnifiedDiff currentDiff = diffs.get(diffNum);
             for (int hunkNum = 0; hunkNum < currentDiff.getHunks().size(); hunkNum++) {
                 Hunk currentHunk = currentDiff.getHunks().get(hunkNum);
                 for (int lineNum = 0; lineNum < currentHunk.getModifiedLines().size(); lineNum++) {
@@ -207,7 +207,7 @@ public class Patch {
      */
     public List<String> exportUnifiedDiffToLines() {
         List<String> export = new ArrayList<String>();
-        for (Diff diff : diffs) {
+        for (SingleFileUnifiedDiff diff : diffs) {
             if (diff != null) {
                 export.addAll(diff.diffToLines());
             }
@@ -241,7 +241,7 @@ public class Patch {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        Iterator<Diff> diffIter = diffs.iterator();
+        Iterator<SingleFileUnifiedDiff> diffIter = diffs.iterator();
         if (diffIter.hasNext()) {
             sb.append(diffs.get(0).toString());
         }
