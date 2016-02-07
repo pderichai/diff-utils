@@ -18,7 +18,7 @@ import java.util.List;
  *     getDiffs [n]
  *     
  * Note that a Diff has its own internal structure. Please see the
- * related documentation in the {@link main.java.edu.washington.cs.dericp.diffutils.Diff}.
+ * related documentation in the {@link Diff}.
  */
 public class UnifiedDiff {
     // TODO representation exposure needs to be removed

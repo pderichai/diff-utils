@@ -24,7 +24,7 @@ import java.util.List;
  *     getHunks[n]
  *     
  * Note that a Hunk has its own internal structure. Please see the related
- * documentation at {@link main.java.edu.washington.cs.dericp.diffutils.Hunk}
+ * documentation at {@link Hunk}
  */
 public class Diff {
     // TODO representation exposure needs to be removed
@@ -157,7 +157,7 @@ public class Diff {
     
     /**
      * Returns the revised diff path of this Diff. The revised diff path
-     * is the pathname of the file at {@link main.java.edu.washington.cs.dericp.diffutils.Diff#getOriginalDiffPath()}
+     * is the pathname of the file at {@link Diff#getOriginalDiffPath()}
      * after this Diff is applied.
      * 
      * @return the revised diff path of this Diff
