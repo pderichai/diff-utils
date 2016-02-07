@@ -1,4 +1,4 @@
-package main.java.edu.washington.cs.dericp.diffutils;
+package edu.washington.cs.dericp.diffutils;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package test.java.edu.washington.cs.dericp.diffutils;
+package edu.washington.cs.dericp.diffutils;
 
 import static org.junit.Assert.*;
 
@@ -7,8 +7,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.java.edu.washington.cs.dericp.diffutils.UnifiedDiff;
-import main.java.edu.washington.cs.dericp.diffutils.Utils;
+import edu.washington.cs.dericp.diffutils.UnifiedDiff;
+import edu.washington.cs.dericp.diffutils.Utils;
 
 public class UnifiedDiffTests {
     
