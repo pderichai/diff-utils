@@ -1,4 +1,4 @@
-package test.edu.washington.cs.dericp.diffutils;
+package test.java.edu.washington.cs.dericp.diffutils;
 
 import static org.junit.Assert.*;
 
@@ -7,12 +7,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.edu.washington.cs.dericp.diffutils.UnifiedDiff;
-import main.edu.washington.cs.dericp.diffutils.Utils;
+import main.java.edu.washington.cs.dericp.diffutils.UnifiedDiff;
+import main.java.edu.washington.cs.dericp.diffutils.Utils;
 
 public class UnifiedDiffTests {
     
-    public static final String TEST_DIR = "src/test/edu/washington/cs/dericp/diffutils/";
+    public static final String TEST_DIR = "src/test/java/edu/washington/cs/dericp/diffutils/";
     public static final String TEST_DIFF_1 = TEST_DIR + "TestDiff1.test";
     public static final String TEST_DIFF_2 = TEST_DIR + "TestDiff2.test";
     public static final String TEST_DIFF_3 = TEST_DIR + "TestDiff3.test";

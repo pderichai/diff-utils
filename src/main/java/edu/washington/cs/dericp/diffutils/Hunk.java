@@ -1,4 +1,4 @@
-package main.edu.washington.cs.dericp.diffutils;
+package main.java.edu.washington.cs.dericp.diffutils;
 
 import java.util.ArrayList;
 import java.util.List;

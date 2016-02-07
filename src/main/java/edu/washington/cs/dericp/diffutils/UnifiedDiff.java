@@ -1,4 +1,4 @@
-package main.edu.washington.cs.dericp.diffutils;
+package main.java.edu.washington.cs.dericp.diffutils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,7 +18,7 @@ import java.util.List;
  *     getDiffs [n]
  *     
  * Note that a Diff has its own internal structure. Please see the
- * related documentation in the {@link main.edu.washington.cs.dericp.diffutils.Diff}.
+ * related documentation in the {@link main.java.edu.washington.cs.dericp.diffutils.Diff}.
  */
 public class UnifiedDiff {
     // TODO representation exposure needs to be removed

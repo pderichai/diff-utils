@@ -1,4 +1,4 @@
-package main.edu.washington.cs.dericp.diffutils;
+package main.java.edu.washington.cs.dericp.diffutils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
