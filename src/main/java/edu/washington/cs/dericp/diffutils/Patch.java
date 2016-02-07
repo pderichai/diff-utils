@@ -5,22 +5,22 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A UnifiedDiff represents a unified diff file. A unified diff is essentially
+ * A Patch represents a unified diff file. A unified diff is essentially
  * composed of one or more diffs which are composed of one or more hunks.
  * 
  * An actual unified diff is essentially a collection of diffs. The structure
  * of a unified diff can be though of as:
  * 
- * UnifiedDiff
+ * Patch
  *     getDiffs [0]
  *     getDiffs [1]
  *     ...
- *     getDiffs [n]
+ *     getDiffs [n].
  *     
  * Note that a Diff has its own internal structure. Please see the
  * related documentation in the {@link Diff}.
  */
-public class UnifiedDiff {
+public class Patch {
     // TODO representation exposure needs to be removed
     
     // This field changes depending on what signifies a new diff.
@@ -30,32 +30,32 @@ public class UnifiedDiff {
     private List<Diff> diffs;
     
     /**
-     * Constructs a UnifiedDiff object from the unified diff at the
+     * Constructs a Patch object from the unified diff at the
      * specified pathname
      * 
      * @param pathname is the relative or absolute pathname of the diff
      */
-    public UnifiedDiff(String pathname) {
+    public Patch(String pathname) {
         this(Utils.readFile(pathname));
     }
     
     /**
-     * Constructs a UnifiedDiff with the specified unified diff lines.
+     * Constructs a Patch with the specified unified diff lines.
      * 
      * @param unifiedDiffLines is a list of the lines of the unified diff
      */
-    public UnifiedDiff(List<String> unifiedDiffLines) {
+    public Patch(List<String> unifiedDiffLines) {
         parseDiffLines(unifiedDiffLines);
     }
     
     /**
-     * Constructs a UnifiedDiff that is a copy of the specified UnifiedDiff.
+     * Constructs a Patch that is a copy of the specified Patch.
      * 
-     * @param unifiedDiff is the UnifiedDiff to be copied
+     * @param patch is the Patch to be copied
      */
-    public UnifiedDiff(UnifiedDiff unifiedDiff) {
+    public Patch(Patch patch) {
         diffs = new ArrayList<Diff>();
-        for (Diff diff : unifiedDiff.diffs) {
+        for (Diff diff : patch.diffs) {
             diffs.add(new Diff(diff));
         }
     }
@@ -94,7 +94,7 @@ public class UnifiedDiff {
                     diffLines.add(currentLine);
                 }
                 
-                // adding the newly constructed Diff to this UnifiedDiff
+                // adding the newly constructed Diff to this Patch
                 diffs.add(new Diff(diffLines));
             } else {
                 currentLine = iter.next();
@@ -103,9 +103,9 @@ public class UnifiedDiff {
     }
     
     /**
-     * Returns the Diffs that compose this UnifiedDiff.
+     * Returns the Diffs that compose this Patch.
      * 
-     * @return a list of Diffs that compose this UnifiedDiff
+     * @return a list of Diffs that compose this Patch
      */
     public List<Diff> getDiffs() {
         return diffs;
@@ -119,7 +119,7 @@ public class UnifiedDiff {
      */
     public void removeDiff(int diffNumber) {
         // Currently implemented as setting the Diff in diffs to null since
-        // it is beneficial to know how many Diffs the UnifiedDiff started
+        // it is beneficial to know how many Diffs the Patch started
         // with.
         if (diffNumber < diffs.size()) {
             diffs.set(diffNumber, null);
@@ -216,9 +216,9 @@ public class UnifiedDiff {
     }
     
     /**
-     * Writes the UnifiedDiff to a file.
+     * Writes the Patch to a file.
      * 
-     * @param pathname is path where the UnifiedDiff will be written
+     * @param pathname is path where the Patch will be written
      */
     public void writeUnifiedDiff(String pathname) {
         Utils.writeFile(exportUnifiedDiffToLines(), pathname);
@@ -227,9 +227,9 @@ public class UnifiedDiff {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof UnifiedDiff)) return false;
+        if (!(obj instanceof Patch)) return false;
         
-        UnifiedDiff other = (UnifiedDiff) obj;
+        Patch other = (Patch) obj;
         return (diffs.equals(other.diffs));
     }
     

@@ -21,7 +21,7 @@ import java.util.List;
  *     getHunks[0]
  *     getHunks[1]
  *     ...
- *     getHunks[n]
+ *     getHunks[n].
  *     
  * Note that a Hunk has its own internal structure. Please see the related
  * documentation at {@link Hunk}
