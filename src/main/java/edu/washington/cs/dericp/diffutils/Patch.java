@@ -44,7 +44,7 @@ public class Patch {
     }
     
     /**
-     * Constructs a Patch with the patch lines.
+     * Constructs a Patch consisting of the given lines.
      * 
      * @param patchLines a List of Strings that represents the patch that
      *                   this Patch instance will represent, one String per
@@ -251,7 +251,7 @@ public class Patch {
     /**
      * Writes the patch that this Patch instance represents to a file.
      * 
-     * @param pathname is path where the patch will be written
+     * @param pathname path where the patch will be written
      */
     public void writeUnifiedDiff(String pathname) {
         Utils.writeFile(getPatchLines(), pathname);
