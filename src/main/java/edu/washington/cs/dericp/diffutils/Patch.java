@@ -5,25 +5,25 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A Patch represents a patch file and is a collection of {@link SingleFileUnifiedDiff}s.
+ * <p>A Patch represents a patch file and is a collection of {@link SingleFileUnifiedDiff}s.</p>
  *
- * A single-file unified diff is a unified diff that represents changes to a
- * single file.
+ * <p>A single-file unified diff is a unified diff that represents changes to a
+ * single file.</p>
  *
- * A Patch provides methods for modifying the patch that it represents.
+ * <p>A Patch provides methods for modifying the patch that it represents.
  * If the Patch was created from a patch file, these changes will not modify
  * the actual file. However, Patch provides a method to write the patch that
- * this Patch instance represents to a file.
+ * this Patch instance represents to a file.</p>
  *
- * A Patch provides methods to access information about the patch it represents.
+ * <p>A Patch provides methods to access information about the patch it represents.
  * In particular, a Patch allows the user to obtain a SingleFileUnifiedDiff
  * instance that represents any of the unified diffs of a single file in this
- * Patch.
+ * Patch.</p>
  *
- * A Patch provides a method to return the patch that it represents as a List
- * of Strings.
+ * <p>A Patch provides a method to return the patch that it represents as a List
+ * of Strings.</p>
  *
- * A Patch provides a method to write the patch that it represents to a file.
+ * <p>A Patch provides a method to write the patch that it represents to a file.</p>
  */
 public class Patch {
     
