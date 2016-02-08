@@ -49,18 +49,18 @@ public class UnifiedDiffTests {
     @Test
     public void testRemoveDiff() {
         patch3.removeDiff(0);
-        assertEquals(patch3.exportUnifiedDiffToLines(), Utils.readFile(TEST_DIR + "TestDiff3RemoveDiff(0).expected"));
+        assertEquals(patch3.getPatchLines(), Utils.readFile(TEST_DIR + "TestDiff3RemoveDiff(0).expected"));
     }
     
     @Test
     public void testRemoveHunk() {
         patch1.removeHunk(0, 2);
-        assertEquals(patch1.exportUnifiedDiffToLines(), Utils.readFile(TEST_DIR + "TestDiff1RemoveHunk(0, 2).expected"));
+        assertEquals(patch1.getPatchLines(), Utils.readFile(TEST_DIR + "TestDiff1RemoveHunk(0, 2).expected"));
     }
     
     @Test
     public void testRemoveChange() {
-        patch1.removeChange(0, 2, 0);
-        assertEquals(patch1.exportUnifiedDiffToLines(), Utils.readFile(TEST_DIR + "TestDiff1RemoveChange(0, 2, 0).expected"));
+        patch1.removeLine(0, 2, 0);
+        assertEquals(patch1.getPatchLines(), Utils.readFile(TEST_DIR + "TestDiff1RemoveChange(0, 2, 0).expected"));
     }
 }

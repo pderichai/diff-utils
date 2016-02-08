@@ -23,8 +23,8 @@ import java.util.List;
  *     ...
  *     getHunks[n].
  *     
- * Note that a Hunk has its own internal structure. Please see the related
- * documentation at {@link Hunk}
+ * Note that a UnifiedHunk has its own internal structure. Please see the related
+ * documentation at {@link UnifiedHunk}
  */
 public class SingleFileUnifiedDiff {
     // TODO representation exposure needs to be removed
@@ -33,7 +33,7 @@ public class SingleFileUnifiedDiff {
     private List<String> contextInfo;
     private String originalDiffPath;
     private String revisedDiffPath;
-    private List<Hunk> hunks;
+    private List<UnifiedHunk> hunks;
     
     /**
      * Constructs a new SingleFileUnifiedDiff with the specified diffLines.
@@ -57,12 +57,12 @@ public class SingleFileUnifiedDiff {
         }
         originalDiffPath = diff.originalDiffPath;
         revisedDiffPath = diff.revisedDiffPath;
-        hunks = new ArrayList<Hunk>();
-        for (Hunk hunk : diff.hunks) {
+        hunks = new ArrayList<UnifiedHunk>();
+        for (UnifiedHunk hunk : diff.hunks) {
             if (hunk == null) {
                 hunks.add(null);
             } else {
-                hunks.add(new Hunk(hunk));
+                hunks.add(new UnifiedHunk(hunk));
             }
         }
     }
@@ -72,7 +72,7 @@ public class SingleFileUnifiedDiff {
      * 
      * @return a list of the Hunks of this SingleFileUnifiedDiff
      */
-    public List<Hunk> getHunks() {
+    public List<UnifiedHunk> getHunks() {
         return hunks;
     }
     
@@ -107,7 +107,7 @@ public class SingleFileUnifiedDiff {
             throw new IllegalArgumentException("SingleFileUnifiedDiff is empty");
         }
         
-        hunks = new ArrayList<Hunk>();
+        hunks = new ArrayList<UnifiedHunk>();
         Iterator<String> iter = diffLines.iterator();
         String line = iter.next();
         
@@ -127,7 +127,7 @@ public class SingleFileUnifiedDiff {
                 if (!iter.hasNext()) {
                     hunkLines.add(line);
                 }
-                hunks.add(new Hunk(hunkLines));
+                hunks.add(new UnifiedHunk(hunkLines));
             } else {
                 line = iter.next();
             }
@@ -176,7 +176,7 @@ public class SingleFileUnifiedDiff {
         diff.addAll(contextInfo);
         diff.add(originalDiffPath);
         diff.add(revisedDiffPath);
-        for (Hunk hunk : hunks) {
+        for (UnifiedHunk hunk : hunks) {
             if (hunk != null) {
                 diff.addAll(hunk.hunkToLines());
             }
@@ -212,7 +212,7 @@ public class SingleFileUnifiedDiff {
         sb.append(originalDiffPath);
         sb.append(System.lineSeparator());
         sb.append(revisedDiffPath);
-        for (Hunk hunk : hunks) {
+        for (UnifiedHunk hunk : hunks) {
             sb.append(System.lineSeparator());
             sb.append(hunk.toString());
         }

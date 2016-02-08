@@ -5,23 +5,27 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A Patch represents a unified diff file. A unified diff is essentially
- * composed of one or more diffs which are composed of one or more hunks.
- * 
- * An actual unified diff is essentially a collection of diffs. The structure
- * of a unified diff can be though of as:
- * 
- * Patch
- *     getDiffs [0]
- *     getDiffs [1]
- *     ...
- *     getDiffs [n].
- *     
- * Note that a SingleFileUnifiedDiff has its own internal structure. Please see the
- * related documentation in the {@link SingleFileUnifiedDiff}.
+ * A Patch represents a patch file and is a collection of {@link SingleFileUnifiedDiff}s.
+ *
+ * A single-file unified diff is a unified diff that represents changes to a
+ * single file.
+ *
+ * A Patch provides methods for modifying the patch that it represents.
+ * If the Patch was created from a patch file, these changes will not modify
+ * the actual file. However, Patch provides a method to write the patch that
+ * this Patch instance represents to a file.
+ *
+ * A Patch provides methods to access information about the patch it represents.
+ * In particular, a Patch allows the user to obtain a SingleFileUnifiedDiff
+ * instance that represents any of the unified diffs of a single file in this
+ * Patch.
+ *
+ * A Patch provides a method to return the patch that it represents as a List
+ * of Strings.
+ *
+ * A Patch provides a method to write the patch that it represents to a file.
  */
 public class Patch {
-    // TODO representation exposure needs to be removed
     
     // This field changes depending on what signifies a new diff.
     // In some formats, this could be "diff", and in others, "---".
@@ -30,28 +34,30 @@ public class Patch {
     private List<SingleFileUnifiedDiff> diffs;
     
     /**
-     * Constructs a Patch object from the unified diff at the
-     * specified pathname
+     * Constructs a Patch from the patch at the specified pathname.
      * 
-     * @param pathname is the relative or absolute pathname of the diff
+     * @param pathname the relative or absolute pathname of the patch that this
+     *                 Patch instance will represent
      */
     public Patch(String pathname) {
         this(Utils.readFile(pathname));
     }
     
     /**
-     * Constructs a Patch with the specified unified diff lines.
+     * Constructs a Patch with the patch lines.
      * 
-     * @param unifiedDiffLines is a list of the lines of the unified diff
+     * @param patchLines a List of Strings that represents the patch that
+     *                   this Patch instance will represent, one String per
+     *                   line of the patch
      */
-    public Patch(List<String> unifiedDiffLines) {
-        parseDiffLines(unifiedDiffLines);
+    public Patch(List<String> patchLines) {
+        parsePatchLines(patchLines);
     }
     
     /**
      * Constructs a Patch that is a copy of the specified Patch.
      * 
-     * @param patch is the Patch to be copied
+     * @param patch the Patch to be copied
      */
     public Patch(Patch patch) {
         diffs = new ArrayList<SingleFileUnifiedDiff>();
@@ -61,19 +67,19 @@ public class Patch {
     }
     
     /**
-     * Reads in the lines of a unified diff.
+     * Reads in the lines of a patch.
      * 
-     * @param unifiedDiffLines is the non-null non-empty List of Strings
-     *        that represent the unified diff, one String per line of the
-     *        diff
+     * @param patchLines the non-null non-empty List of Strings
+     *        that represent a patch, one string per line of the
+     *        patch
      */
-    private void parseDiffLines(List<String> unifiedDiffLines) {
-        if (unifiedDiffLines == null || unifiedDiffLines.isEmpty()) {
+    private void parsePatchLines(List<String> patchLines) {
+        if (patchLines == null || patchLines.isEmpty()) {
             throw new IllegalArgumentException("SingleFileUnifiedDiff is empty");
         }
         
         diffs = new ArrayList<SingleFileUnifiedDiff>();
-        Iterator<String> iter = unifiedDiffLines.iterator();
+        Iterator<String> iter = patchLines.iterator();
         String currentLine = null;
         if (iter.hasNext()) {
             currentLine = iter.next();
@@ -103,63 +109,88 @@ public class Patch {
     }
     
     /**
-     * Returns the Diffs that compose this Patch.
+     * Returns the {@link SingleFileUnifiedDiff}s that compose this Patch. Modifying a
+     * SingleFileUnifiedDiff in the List that is returned will modify this Patch.
+     * Modifying the List itself will not affect this Patch.
      * 
-     * @return a list of Diffs that compose this Patch
+     * @return a list of {@link SingleFileUnifiedDiff}s that compose this Patch
      */
     public List<SingleFileUnifiedDiff> getDiffs() {
-        return diffs;
+        return new ArrayList<SingleFileUnifiedDiff>(diffs);
+    }
+
+    /**
+     * Returns the {@link SingleFileUnifiedDiff} at the specified index of this Patch.
+     * Modifying the returned SingleFileUnifiedDiff will modify this Patch.
+     * @param diffIndex the zero-based index of the single-file unified diff in
+     *                  this Patch that will be returned
+     * @return a SingleFileUnifiedDiff instance that represents the specified
+     *         single-file unified diff in this Patch
+     */
+    public SingleFileUnifiedDiff getDiff(int diffIndex) {
+        return diffs.get(diffIndex);
     }
     
     /**
-     * Removes a diff from the unified diff. Conceptually, this method undoes
-     * all the changes in an entire file from the unified diff.
+     * Removes a unified diff from this Patch. Conceptually, all the changes
+     * denoted by the specified single-file unified diff in this Patch will
+     * no longer be represented by this Patch. Once a unified diff is removed,
+     * the indices of the single-file unified diffs in this Patch will remain
+     * unchanged.
      * 
-     * @param diffNumber is the zero-based index of the diff to be removed
+     * @param diffIndex the zero-based index of the single-file unified diff
+     *                  to be removed
      */
-    public void removeDiff(int diffNumber) {
+    public void removeDiff(int diffIndex) {
         // Currently implemented as setting the SingleFileUnifiedDiff in diffs to null since
-        // it is beneficial to know how many Diffs the Patch started
-        // with.
-        if (diffNumber < diffs.size()) {
-            diffs.set(diffNumber, null);
+        // it is beneficial to know how many UnifiedDiffs the Patch started
+        // with. If this behavior changes, the specification also needs to change.
+        if (diffIndex < diffs.size()) {
+            diffs.set(diffIndex, null);
         }
     }
     
     /**
-     * Removes a hunk from the unified diff. Conceptually, this
-     * method undoes all the changes in an entire hunk.
+     * Removes a unified hunk from a single-file unified diff in this Patch.
+     * Conceptually, all the changes denoted by the specified unified hunk
+     * in this Patch will no longer be represented by this Patch. Once a
+     * unified hunk is removed, the indices of the unified hunks in the
+     * specified unified diff will remain unchanged.
      * 
-     * @param diffNumber is the zero-based index of the specified diff
-     * @param hunkNumber is the zero-based index of the hunk to be removed
+     * @param diffIndex the zero-based index of the single-file unified diff that
+     *                   contains the unified hunk to be removed
+     * @param hunkIndex the zero-based index of the unified hunk to be removed
+     *                   from within the specified unified diff
      */
-    public void removeHunk(int diffNumber, int hunkNumber) {
-        if (diffNumber < diffs.size() && hunkNumber < diffs.get(diffNumber).getHunks().size()) {
-            List<Hunk> hunks = diffs.get(diffNumber).getHunks();
-            Hunk removedHunk = hunks.get(hunkNumber);
+    public void removeHunk(int diffIndex, int hunkIndex) {
+        if (diffIndex < diffs.size() && hunkIndex < diffs.get(diffIndex).getHunks().size()) {
+            List<UnifiedHunk> hunks = diffs.get(diffIndex).getHunks();
+            UnifiedHunk removedHunk = hunks.get(hunkIndex);
             int offset = removedHunk.getOriginalHunkSize() - removedHunk.getRevisedHunkSize();
-            for (int i = hunkNumber + 1; i < diffs.get(diffNumber).getHunks().size(); ++i) {
+            for (int i = hunkIndex + 1; i < diffs.get(diffIndex).getHunks().size(); ++i) {
                hunks.get(i).modifyRevisedLineNumber(offset);
             }
-            hunks.set(hunkNumber, null);
+            hunks.set(hunkIndex, null);
         }
     }
     
-    /**
+    /** TODO this method needs to be changed completely
+     * THIS METHOD IS BUGGY AND THE DOCUMENTATION IS INCORRECT! please ignore.
+     *
      * Removes a change in the unified diff. Conceptually, this undoes a single
      * change in a hunk.
      * 
      * @param diffLine is the exact line in the unified diff that should be
      *        undone
      */
-    public void removeChange(String diffLine) {
+    public void removeLine(String diffLine) {
         for (int diffNum = 0; diffNum < diffs.size(); diffNum++) {
             SingleFileUnifiedDiff currentDiff = diffs.get(diffNum);
             for (int hunkNum = 0; hunkNum < currentDiff.getHunks().size(); hunkNum++) {
-                Hunk currentHunk = currentDiff.getHunks().get(hunkNum);
+                UnifiedHunk currentHunk = currentDiff.getHunks().get(hunkNum);
                 for (int lineNum = 0; lineNum < currentHunk.getModifiedLines().size(); lineNum++) {
                     if (currentHunk.getModifiedLines().get(lineNum).equals(diffLine)) {
-                        removeChange(diffNum, hunkNum, lineNum);
+                        removeLine(diffNum, hunkNum, lineNum);
                         break;
                     }
                 }
@@ -168,26 +199,27 @@ public class Patch {
     }
     
     /**
-     * Removes a change in the unified diff. Conceptually, this undoes a single
-     * change in a hunk.
-     * 
-     * @param diffNumber is the zero-based index of the diff that the change
-     *                   is contained in
-     * @param hunkNumber is the zero-based index of the hunk that the change
-     *                   is contained in
-     * @param lineNumber is the zero-based index of the line number of the
-     *                   change in the modified lines of the hunk. The modified
-     *                   lines are defined to be all the lines within a hunk
-     *                   exclusive of the context lines that exist at the
-     *                   beginning and end of a hunk.
+     * Removes a line from the specified unified hunk in the specified single-file
+     * unified diff in this Patch. Conceptually, the change denoted by the specified
+     * line will no longer be represented by this Patch. Once a line is removed,
+     * the indices of the lines in the specified unified hunk will remain
+     * unchanged.
+     *
+     * @param diffIndex the zero-based index of the single-file unified diff that
+     *                  contains the line to be removed
+     * @param hunkIndex the zero-based index of the hunk that contains the
+     *                  line to be removed
+     * @param lineIndex is the zero-based index of the line to be removed in
+     *                  the {@link UnifiedHunk#getModifiedLines()}
+     *                  of the specified unified hunk and unified diff
      */
-    public void removeChange(int diffNumber, int hunkNumber, int lineNumber) {
-        List<Hunk> hunks = diffs.get(diffNumber).getHunks();
-        Hunk modifiedHunk = hunks.get(hunkNumber);
-        int result = modifiedHunk.removeLine(lineNumber);
+    public void removeLine(int diffIndex, int hunkIndex, int lineIndex) {
+        List<UnifiedHunk> hunks = diffs.get(diffIndex).getHunks();
+        UnifiedHunk modifiedHunk = hunks.get(hunkIndex);
+        int result = modifiedHunk.removeLine(lineIndex);
         if (result != 0) {
-            for (int i = hunkNumber + 1; i < hunks.size(); i++) {
-                Hunk currentHunk = hunks.get(i);
+            for (int i = hunkIndex + 1; i < hunks.size(); i++) {
+                UnifiedHunk currentHunk = hunks.get(i);
                 if (currentHunk != null) {
                     if (result == 1) {
                         hunks.get(i).modifyRevisedLineNumber(-1);
@@ -201,11 +233,12 @@ public class Patch {
     }
     
     /**
-     * Exports the unified diff as a List of Strings.
+     * Gets the lines of this patch.
      * 
-     * @return a list of strings which are the lines of the unified diff
+     * @return a List of Strings that represents the lines of the patch that
+     *         this Patch instance represents, one string per line of the patch
      */
-    public List<String> exportUnifiedDiffToLines() {
+    public List<String> getPatchLines() {
         List<String> export = new ArrayList<String>();
         for (SingleFileUnifiedDiff diff : diffs) {
             if (diff != null) {
@@ -216,12 +249,12 @@ public class Patch {
     }
     
     /**
-     * Writes the Patch to a file.
+     * Writes the patch that this Patch instance represents to a file.
      * 
-     * @param pathname is path where the Patch will be written
+     * @param pathname is path where the patch will be written
      */
     public void writeUnifiedDiff(String pathname) {
-        Utils.writeFile(exportUnifiedDiffToLines(), pathname);
+        Utils.writeFile(getPatchLines(), pathname);
     }
     
     @Override

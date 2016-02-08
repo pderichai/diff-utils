@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 /**
  * This class represents a hunk. A hunk denotes changes in a contiguous "hunk"
+ * TODO fix this documentation
  * of code. As long as changes are within a certain context size of each other,
  * they can be considered in the same hunk. Each diff is composed of one or
  * more hunks.
@@ -20,7 +21,7 @@ import java.util.Scanner;
  *     getModifiedLines()
  *     getEndContext()
  */
-public class Hunk {
+public class UnifiedHunk {
     // TODO representation exposure needs to be removed
     
     // TODO make this a parameter for the construction of a hunk
@@ -43,12 +44,12 @@ public class Hunk {
     private String filenameInfo;
     
     /**
-     * Constructs a new Hunk with the specified hunk lines.
+     * Constructs a new UnifiedHunk with the specified hunk lines.
      * 
      * @param originalHunkLines is a List of Strings that represents the
      *        original lines of the hunk
      */
-    public Hunk(List<String> originalHunkLines) { 
+    public UnifiedHunk(List<String> originalHunkLines) {
         this.originalHunkLines = originalHunkLines;
         setContextInfo(originalHunkLines.get(0));
         modifiedLines = new ArrayList<String>();
@@ -58,11 +59,11 @@ public class Hunk {
     }
     
     /**
-     * Constructs a Hunk that is a copy of the specified Hunk.
+     * Constructs a UnifiedHunk that is a copy of the specified UnifiedHunk.
      * 
-     * @param hunk is the Hunk to be copied
+     * @param hunk is the UnifiedHunk to be copied
      */
-    public Hunk(Hunk hunk) {
+    public UnifiedHunk(UnifiedHunk hunk) {
         originalLineNumber = hunk.originalLineNumber;
         originalHunkSize = hunk.originalHunkSize;
         revisedLineNumber = hunk.revisedLineNumber;
@@ -75,7 +76,7 @@ public class Hunk {
     }
     
     /**
-     * Sets the context information of this Hunk.
+     * Sets the context information of this UnifiedHunk.
      * 
      * @param contextInfo is the line of hunk context information will precede
      *        the context lines of this hunk
@@ -92,9 +93,9 @@ public class Hunk {
     }
     
     /**
-     * Gets the context information of this Hunk.
+     * Gets the context information of this UnifiedHunk.
      * 
-     * @return the context information of this Hunk
+     * @return the context information of this UnifiedHunk
      */
     public String getContextInfo() {
         String contextInfo = "@@ -" + originalLineNumber + ',' + originalHunkSize +
@@ -106,7 +107,7 @@ public class Hunk {
     }
     
     /**
-     * Gets the modified lines of this Hunk. Modified lines are defined to be
+     * Gets the modified lines of this UnifiedHunk. Modified lines are defined to be
      * the lines of the hunk between the context lines found at the top and
      * bottom of each hunk.
      * 
@@ -118,7 +119,7 @@ public class Hunk {
     }
     
     /**
-     * Gets the start context of this Hunk. The start context is defined to be
+     * Gets the start context of this UnifiedHunk. The start context is defined to be
      * the lines immediately following the context information in a hunk that
      * precede the modified lines.
      * 
@@ -136,7 +137,7 @@ public class Hunk {
     }
     
     /**
-     * Gets the end context of this Hunk. The end context is defined to be the
+     * Gets the end context of this UnifiedHunk. The end context is defined to be the
      * lines immediately following the modified lines in a hunk.
      * 
      * @return  the context lines at the end of a hunk
@@ -153,9 +154,9 @@ public class Hunk {
     
     
     /**
-     * Returns this Hunk as a List of Strings.
+     * Returns this UnifiedHunk as a List of Strings.
      * 
-     * @return a List of Strings that represent the lines of this Hunk
+     * @return a List of Strings that represent the lines of this UnifiedHunk
      */
     public List<String> hunkToLines() {
         List<String> hunkLines = new ArrayList<String>();
@@ -167,11 +168,11 @@ public class Hunk {
     }
     
     /**
-     * Removes a line from this Hunk.
+     * Removes a line from this UnifiedHunk.
      * 
      * @param lineNumber is an int that specifies the zero-based index of the
      *        of the line in the modified lines section to be removed from
-     *        this Hunk
+     *        this UnifiedHunk
      * @return an int that denotes the kind of line removed:
      *             1 if the removed line was an insertion
      *             -1 if the removed line was a deletion
@@ -229,9 +230,9 @@ public class Hunk {
     @Override
     public boolean equals (Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof Hunk)) return false;
+        if (!(obj instanceof UnifiedHunk)) return false;
         
-        Hunk other = (Hunk) obj;
+        UnifiedHunk other = (UnifiedHunk) obj;
         return originalHunkLines.equals(other.originalHunkLines) &&
                 modifiedLines.equals(other.modifiedLines) &&
                 originalLineNumber == other.originalLineNumber &&
