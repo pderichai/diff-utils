@@ -66,16 +66,42 @@ public class SingleFileUnifiedDiff {
             }
         }
     }
-    
+
+    // TODO: potentially remove this method since we have getHunk
     /**
      * Gets the hunks of this SingleFileUnifiedDiff.
      * 
      * @return a list of the Hunks of this SingleFileUnifiedDiff
      */
     public List<UnifiedHunk> getHunks() {
-        return hunks;
+        return new ArrayList<UnifiedHunk>(hunks);
     }
-    
+
+    /**
+     * Returns the {@link SingleFileUnifiedDiff} at the specified index of this Patch.
+     * Modifying the returned SingleFileUnifiedDiff will modify this Patch.
+     * @param hunkIndex the zero-based index of the hunk in this
+     *                  SingleFileUnifiedDiff that will be returned
+     * @return the UnifiedHunk at the specified index in this SingleFileUnifiedDiff
+     */
+    public UnifiedHunk getHunk(int hunkIndex) {
+        return hunks.get(hunkIndex);
+    }
+
+    /**
+     * Returns the number of UnifiedHunks that are contained in this
+     * SingleFileUnifiedPatch. The return value specifies the number
+     * of UnifiedHunks that this SingleFileUnifiedPatch was constructed
+     * with and is unaffected by the removal of UnifiedHunks from this
+     * SingleFileUnifiedDiff
+     *
+     * @return the number of UnifiedHunks that this SingleFileUnifiedDiff
+     *         was constructed with
+     */
+    public int numHunks() {
+        return hunks.size();
+    }
+
     /**
      * Sets the context info of this SingleFileUnifiedDiff.
      * 

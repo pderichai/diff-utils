@@ -130,7 +130,20 @@ public class Patch {
     public SingleFileUnifiedDiff getDiff(int diffIndex) {
         return diffs.get(diffIndex);
     }
-    
+
+    /**
+     * Returns the number of SingleFileUnifiedDiffs contained in this patch.
+     * The return value specifies the number of SingleFileUnifiedDiffs that
+     * this Patch was constructed with and is unaffected by the removal of
+     * SingleFileUnifiedDiffs from this Patch.
+     *
+     * @return the number of SingleFileUnifiedDiffs that this Patch was
+     *         constructed with
+     */
+    public int numDiffs() {
+       return diffs.size();
+    }
+
     /**
      * Removes a unified diff from this Patch. Conceptually, all the changes
      * denoted by the specified single-file unified diff in this Patch will
@@ -173,8 +186,9 @@ public class Patch {
             hunks.set(hunkIndex, null);
         }
     }
-    
-    /** TODO this method needs to be changed completely
+
+    // TODO this method needs to be changed completely
+    /**
      * THIS METHOD IS BUGGY AND THE DOCUMENTATION IS INCORRECT! please ignore.
      *
      * Removes a change in the unified diff. Conceptually, this undoes a single
