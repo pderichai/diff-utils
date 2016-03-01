@@ -5,16 +5,17 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.List;
 
 /**
- * This class is a container for multiple SingleFilePatches.
+ * This class represents changes to a single file.
  */
-public class Patch {
-    private List<SingleFilePatch> singleFilePatches;
+public class SingleFilePatch {
 
-    public List<LineChange> getChanges() {
+    private SingleFileUnifiedDiff diff;
+
+    public List<LineChange> getFileChanges() {
         throw new NotImplementedException();
     }
 
-    public List<List<LineChange>> getContiguousChanges() {
+    public List<List<LineChange>> getContigousFileChanges() {
         throw new NotImplementedException();
     }
 }

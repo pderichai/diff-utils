@@ -17,15 +17,15 @@ public class UnifiedDiffTests {
     public static final String TEST_DIFF_2_OUT = TEST_DIR + "TestDiff2.out";
     public static final String TEST_DIFF_3_OUT = TEST_DIR + "TestDiff3.out";
     
-    private Patch patch1;
-    private Patch patch2;
-    private Patch patch3;
+    private MultiFileUnifiedDiff patch1;
+    private MultiFileUnifiedDiff patch2;
+    private MultiFileUnifiedDiff patch3;
     
     @Before
     public void setup() {
-        patch1 = new Patch(TEST_DIFF_1);
-        patch2 = new Patch(TEST_DIFF_2);
-        patch3 = new Patch(TEST_DIFF_3);
+        patch1 = new MultiFileUnifiedDiff(TEST_DIFF_1);
+        patch2 = new MultiFileUnifiedDiff(TEST_DIFF_2);
+        patch3 = new MultiFileUnifiedDiff(TEST_DIFF_3);
     }
     
     @Test

@@ -78,8 +78,8 @@ public class SingleFileUnifiedDiff {
     }
 
     /**
-     * Returns the {@link SingleFileUnifiedDiff} at the specified index of this Patch.
-     * Modifying the returned SingleFileUnifiedDiff will modify this Patch.
+     * Returns the {@link SingleFileUnifiedDiff} at the specified index of this MultiFileUnifiedDiff.
+     * Modifying the returned SingleFileUnifiedDiff will modify this MultiFileUnifiedDiff.
      * @param hunkIndex the zero-based index of the hunk in this
      *                  SingleFileUnifiedDiff that will be returned
      * @return the UnifiedHunk at the specified index in this SingleFileUnifiedDiff

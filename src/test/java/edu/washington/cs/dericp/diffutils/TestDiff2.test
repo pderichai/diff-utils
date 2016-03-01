@@ -12,7 +12,7 @@ index 419e3eb..f040dd9 100644
  import edu.washington.bugisolation.util.Utils;
 -import edu.washington.cs.dericp.diffutils.SingleFileUnifiedDiff;
  import edu.washington.cs.dericp.diffutils.UnifiedHunk;
- import edu.washington.cs.dericp.diffutils.Patch;
+ import edu.washington.cs.dericp.diffutils.MultiFileUnifiedDiff;
  
 @@ -62,7 +60,7 @@ public class DeltaDebugging {
          List<List<T>> subSets = new LinkedList<List<T>>();
