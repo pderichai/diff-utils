@@ -1,6 +1,7 @@
 package edu.washington.cs.dericp.diffutils.diff;
 
 import edu.washington.cs.dericp.diffutils.UnifiedHunk;
+import edu.washington.cs.dericp.diffutils.change.LineChange;
 
 import java.util.ArrayList;
 import java.util.Iterator;

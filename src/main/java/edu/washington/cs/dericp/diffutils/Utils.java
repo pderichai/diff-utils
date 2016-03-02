@@ -1,5 +1,7 @@
 package edu.washington.cs.dericp.diffutils;
 
+import edu.washington.cs.dericp.diffutils.change.LineChange;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -14,16 +16,16 @@ import java.util.List;
  * This class provides utility functions that are used throughout diff-utils.
  */
 public class Utils {
-    
+
     public static final boolean DEBUG = true;
-    
+
     /**
      * Reads the file at the specified pathname and returns it as a List of
      * Strings, one per line of the file.
-     * 
-     * @param pathname      a String, the path of the file on the machine
-     * @return              a List of Strings representing the lines of the file
-     *                      at the specified pathname
+     *
+     * @param pathname a String, the path of the file on the machine
+     * @return a List of Strings representing the lines of the file
+     * at the specified pathname
      */
     public static List<String> readFile(String pathname) {
         List<String> lines = new ArrayList<String>();
@@ -39,14 +41,14 @@ public class Utils {
             return null;
         }
     }
-    
+
     /**
      * Writes a List of Strings, each String representing a line in the file,
      * to the file at the specified pathname.
-     * 
+     *
      * @param fileLines are the lines of file stored as a List of Strings, one
-     *        String per line of the file
-     * @param pathname is the path of the file to be created/modified
+     *                  String per line of the file
+     * @param pathname  is the path of the file to be created/modified
      */
     public static void writeFile(List<String> fileLines, String pathname) {
         try {
@@ -62,6 +64,26 @@ public class Utils {
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static LineChange.Type getType(String line) {
+        if (line.startsWith("+")) {
+            return LineChange.Type.INSERTION;
+        } else if (line.startsWith("-")) {
+            return LineChange.Type.DELETION;
+        } else {
+            return LineChange.Type.CONTEXT;
+        }
+    }
+
+    public static String transformIntoDiffLine(LineChange change) {
+        if (change.getType() == LineChange.Type.INSERTION) {
+            return "+" + change.getContent();
+        } else if (change.getType() == LineChange.Type.DELETION) {
+            return "-" + change.getContent();
+        } else {
+            return " " + change.getContent();
         }
     }
 }

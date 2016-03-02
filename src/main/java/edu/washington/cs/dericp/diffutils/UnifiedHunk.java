@@ -1,5 +1,7 @@
 package edu.washington.cs.dericp.diffutils;
 
+import edu.washington.cs.dericp.diffutils.change.LineChange;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -30,7 +32,7 @@ public class UnifiedHunk {
     private List<String> originalHunkLines;
     // all the lines exclusive of the CONTEXT_SIZE lines at the beginning
     // and end of the hunk
-    private List<String> modifiedLines;
+    private List<LineChange> modifiedLines;
     // where the hunk starts in the original file
     private int originalLineNumber;
     // the size of the hunk in the original file
@@ -52,9 +54,10 @@ public class UnifiedHunk {
     public UnifiedHunk(List<String> originalHunkLines) {
         this.originalHunkLines = originalHunkLines;
         setContextInfo(originalHunkLines.get(0));
-        modifiedLines = new ArrayList<String>();
+        modifiedLines = new ArrayList<LineChange>();
         for (int i = CONTEXT_SIZE + 1; i < originalHunkLines.size() - CONTEXT_SIZE; ++i) {
-            modifiedLines.add(originalHunkLines.get(i));
+            String line = originalHunkLines.get(i);
+            modifiedLines.add(new LineChange(line.substring(1), 0, 0, Utils.getType(line)));
         }
     }
     
@@ -70,7 +73,7 @@ public class UnifiedHunk {
         revisedHunkSize = hunk.revisedHunkSize;
         originalHunkLines = new ArrayList<String>();
         originalHunkLines.addAll(hunk.originalHunkLines);
-        modifiedLines = new ArrayList<String>();
+        modifiedLines = new ArrayList<LineChange>();
         modifiedLines.addAll(hunk.modifiedLines);
         filenameInfo = hunk.filenameInfo;
     }
@@ -114,7 +117,7 @@ public class UnifiedHunk {
      * @return a List of Strings that represent the modified lines of this hunk,
      *         one String per line
      */
-    public List<String> getModifiedLines() {
+    public List<LineChange> getModifiedLines() {
         return modifiedLines;
     }
     
@@ -162,7 +165,9 @@ public class UnifiedHunk {
         List<String> hunkLines = new ArrayList<String>();
         hunkLines.add(getContextInfo());
         hunkLines.addAll(getStartContext());
-        hunkLines.addAll(getModifiedLines());
+        for (LineChange change : getModifiedLines()) {
+            hunkLines.add(Utils.transformIntoDiffLine(change));
+        }
         hunkLines.addAll(getEndContext());
         return hunkLines;
     }
@@ -182,15 +187,15 @@ public class UnifiedHunk {
         if (lineNumber < 0 || lineNumber >= modifiedLines.size()) {
             throw new IllegalArgumentException("Line number is out of bounds");
         }
-        String line = getModifiedLines().get(lineNumber);
-        if (line.startsWith("+")) {
+        LineChange change = getModifiedLines().get(lineNumber);
+        if (change.getType() == LineChange.Type.INSERTION) {
             modifiedLines.set(lineNumber, null);
             --revisedHunkSize;
             return 1;
         }
-        if (line.startsWith("-")) {
+        if (change.getType() == LineChange.Type.DELETION) {
             // essentially turns the minus line into a context line
-            modifiedLines.set(lineNumber, line.replaceFirst("\\-", " "));
+            change.setType(LineChange.Type.CONTEXT);
             ++revisedHunkSize;
             return -1;
         }

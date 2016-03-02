@@ -22,6 +22,10 @@ public class LineChange {
         this.type = type;
     }
 
+    public void setType(Type type) {
+        this.type = type;
+    }
+
     public String getContent() {
         return content;
     }
