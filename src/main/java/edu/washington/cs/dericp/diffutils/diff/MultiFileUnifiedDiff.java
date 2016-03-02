@@ -1,4 +1,7 @@
-package edu.washington.cs.dericp.diffutils;
+package edu.washington.cs.dericp.diffutils.diff;
+
+import edu.washington.cs.dericp.diffutils.UnifiedHunk;
+import edu.washington.cs.dericp.diffutils.Utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,7 +29,8 @@ import java.util.List;
  * <p>A MultiFileUnifiedDiff provides a method to write the patch that it represents to a file.</p>
  */
 public class MultiFileUnifiedDiff {
-    
+    // TODO: at some point this might extend an interface
+
     // This field changes depending on what signifies a new diff.
     // In some formats, this could be "diff", and in others, "---".
     // TODO if necessary, turn this into a field that can be set in the constructor

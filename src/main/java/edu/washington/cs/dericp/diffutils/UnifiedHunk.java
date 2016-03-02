@@ -196,6 +196,14 @@ public class UnifiedHunk {
         }
         return 0;
     }
+
+    public int getOriginalLineNumber() {
+        return originalLineNumber;
+    }
+
+    public int getRevisedLineNumber() {
+        return revisedLineNumber;
+    }
     
     /**
      * Returns the size of the original hunk, that is, the size of this hunk

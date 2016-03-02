@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import edu.washington.cs.dericp.diffutils.diff.MultiFileUnifiedDiff;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,4 +1,6 @@
-package edu.washington.cs.dericp.diffutils;
+package edu.washington.cs.dericp.diffutils.diff;
+
+import edu.washington.cs.dericp.diffutils.UnifiedHunk;
 
 import java.util.ArrayList;
 import java.util.Iterator;
