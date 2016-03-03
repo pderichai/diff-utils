@@ -77,7 +77,7 @@ public class SingleFileUnifiedDiff {
      * @return a list of the Hunks of this SingleFileUnifiedDiff
      */
     public List<UnifiedHunk> getHunks() {
-        return new ArrayList<UnifiedHunk>(hunks);
+        return hunks;
     }
 
     /**
