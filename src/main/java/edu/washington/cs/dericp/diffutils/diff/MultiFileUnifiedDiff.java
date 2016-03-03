@@ -2,6 +2,8 @@ package edu.washington.cs.dericp.diffutils.diff;
 
 import edu.washington.cs.dericp.diffutils.UnifiedHunk;
 import edu.washington.cs.dericp.diffutils.Utils;
+import edu.washington.cs.dericp.diffutils.change.LineChange;
+import edu.washington.cs.dericp.diffutils.patch.Patch;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,7 +30,7 @@ import java.util.List;
  *
  * <p>A MultiFileUnifiedDiff provides a method to write the patch that it represents to a file.</p>
  */
-public class MultiFileUnifiedDiff {
+public class MultiFileUnifiedDiff implements Patch {
     // TODO: at some point this might extend an interface
 
     // This field changes depending on what signifies a new diff.
@@ -274,7 +276,21 @@ public class MultiFileUnifiedDiff {
     public void writeUnifiedDiff(String pathname) {
         Utils.writeFile(getPatchLines(), pathname);
     }
-    
+
+    public List<LineChange> getChanges() {
+        List<LineChange> ret = new ArrayList<>();
+        for (SingleFileUnifiedDiff SFUnifiedDiff : diffs) {
+            for (UnifiedHunk hunk : SFUnifiedDiff.getHunks()) {
+                for (LineChange change : hunk.getModifiedLines()) {
+                    if (change.getType() != LineChange.Type.CONTEXT) {
+                        ret.add(change);
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

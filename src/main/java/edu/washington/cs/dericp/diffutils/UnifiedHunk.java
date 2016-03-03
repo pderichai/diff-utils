@@ -55,9 +55,23 @@ public class UnifiedHunk {
         this.originalHunkLines = originalHunkLines;
         setContextInfo(originalHunkLines.get(0));
         modifiedLines = new ArrayList<LineChange>();
+        int currentOriginalLineNum = originalLineNumber + CONTEXT_SIZE;
+        int currentRevisedLineNum = revisedLineNumber + CONTEXT_SIZE;
         for (int i = CONTEXT_SIZE + 1; i < originalHunkLines.size() - CONTEXT_SIZE; ++i) {
             String line = originalHunkLines.get(i);
-            modifiedLines.add(new LineChange(line.substring(1), 0, 0, Utils.getType(line)));
+            LineChange.Type lineType = Utils.getType(line);
+            if (lineType == LineChange.Type.INSERTION) {
+                currentRevisedLineNum++;
+                modifiedLines.add(new LineChange(line.substring(1), -1, currentRevisedLineNum, Utils.getType(line)));
+            } else if (lineType == LineChange.Type.DELETION) {
+                currentOriginalLineNum++;
+                modifiedLines.add(new LineChange(line.substring(1), currentOriginalLineNum, -1, Utils.getType(line)));
+            } else {
+                currentOriginalLineNum++;
+                currentRevisedLineNum++;
+                modifiedLines.add(new LineChange(line.substring(1), currentOriginalLineNum, currentRevisedLineNum, Utils.getType(line)));
+            }
+            // modifiedLines.add(new LineChange(line.substring(1), 0, 0, Utils.getType(line)));
         }
     }
     
