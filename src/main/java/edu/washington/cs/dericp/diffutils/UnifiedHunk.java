@@ -20,7 +20,7 @@ import java.util.Scanner;
  * Structure of a hunk:
  *     getContextInfo()
  *     getStartContext()
- *     getModifiedLines()
+ *     getHunkLines()
  *     getEndContext()
  */
 public class UnifiedHunk {
@@ -28,11 +28,9 @@ public class UnifiedHunk {
     
     // TODO make this a parameter for the construction of a hunk
     public static final int CONTEXT_SIZE = 3;
-    // the non-abstracted lines of the hunk i.e. what can be directly parsed
-    private List<String> originalHunkLines;
     // all the lines exclusive of the CONTEXT_SIZE lines at the beginning
     // and end of the hunk
-    private List<LineChange> modifiedLines;
+    private List<LineChange> hunkLines;
     // where the hunk starts in the original file
     private int originalLineNumber;
     // the size of the hunk in the original file
@@ -52,25 +50,24 @@ public class UnifiedHunk {
      *        original lines of the hunk
      */
     public UnifiedHunk(List<String> originalHunkLines) {
-        this.originalHunkLines = originalHunkLines;
         setContextInfo(originalHunkLines.get(0));
-        modifiedLines = new ArrayList<LineChange>();
-        int currentOriginalLineNum = originalLineNumber + CONTEXT_SIZE;
-        int currentRevisedLineNum = revisedLineNumber + CONTEXT_SIZE;
+        hunkLines = new ArrayList<LineChange>();
+        int currentOriginalLineNum = originalLineNumber;
+        int currentRevisedLineNum = revisedLineNumber;
         // starting at i = 1 to skipe the line number and hunk size information
         for (int i = 1; i < originalHunkLines.size(); ++i) {
             String line = originalHunkLines.get(i);
             LineChange.Type lineType = Utils.getType(line);
             if (lineType == LineChange.Type.INSERTION) {
                 currentRevisedLineNum++;
-                modifiedLines.add(new LineChange(line.substring(1), -1, currentRevisedLineNum, Utils.getType(line)));
+                hunkLines.add(new LineChange(line.substring(1), -1, currentRevisedLineNum, Utils.getType(line)));
             } else if (lineType == LineChange.Type.DELETION) {
                 currentOriginalLineNum++;
-                modifiedLines.add(new LineChange(line.substring(1), currentOriginalLineNum, -1, Utils.getType(line)));
+                hunkLines.add(new LineChange(line.substring(1), currentOriginalLineNum, -1, Utils.getType(line)));
             } else {
                 currentOriginalLineNum++;
                 currentRevisedLineNum++;
-                modifiedLines.add(new LineChange(line.substring(1), currentOriginalLineNum, currentRevisedLineNum, Utils.getType(line)));
+                hunkLines.add(new LineChange(line.substring(1), currentOriginalLineNum, currentRevisedLineNum, Utils.getType(line)));
             }
         }
     }
@@ -85,10 +82,8 @@ public class UnifiedHunk {
         originalHunkSize = hunk.originalHunkSize;
         revisedLineNumber = hunk.revisedLineNumber;
         revisedHunkSize = hunk.revisedHunkSize;
-        originalHunkLines = new ArrayList<String>();
-        originalHunkLines.addAll(hunk.originalHunkLines);
-        modifiedLines = new ArrayList<LineChange>();
-        modifiedLines.addAll(hunk.modifiedLines);
+        hunkLines = new ArrayList<LineChange>();
+        hunkLines.addAll(hunk.hunkLines);
         filenameInfo = hunk.filenameInfo;
     }
     
@@ -131,45 +126,10 @@ public class UnifiedHunk {
      * @return a List of Strings that represent the modified lines of this hunk,
      *         one String per line
      */
-    public List<LineChange> getModifiedLines() {
-        return modifiedLines;
+    public List<LineChange> getHunkLines() {
+        return hunkLines;
     }
-    
-    /**
-     * Gets the start context of this UnifiedHunk. The start context is defined to be
-     * the lines immediately following the context information in a hunk that
-     * precede the modified lines.
-     * 
-     * @return a List of Strings represents the context lines of this hunk, one
-     *         String per line of context
-     */
-    public List<String> getStartContext() {
-        List<String> startContext = new ArrayList<String>();
-        for (int i = 1; i <= CONTEXT_SIZE; ++i) {
-            if (originalHunkLines.get(i).charAt(0) != '+' || originalHunkLines.get(i).charAt(0) != '-') {
-                startContext.add(originalHunkLines.get(i));
-            }
-        }
-        return startContext;
-    }
-    
-    /**
-     * Gets the end context of this UnifiedHunk. The end context is defined to be the
-     * lines immediately following the modified lines in a hunk.
-     * 
-     * @return  the context lines at the end of a hunk
-     */
-    public List<String> getEndContext() {
-        List<String> endContext = new ArrayList<String>();
-        for (int i = originalHunkLines.size() - CONTEXT_SIZE; i < originalHunkLines.size(); ++i) {
-            if (originalHunkLines.get(i).charAt(0) != '+' || originalHunkLines.get(i).charAt(0) != '-') {
-                endContext.add(originalHunkLines.get(i));
-            }
-        }
-        return endContext;
-    }
-    
-    
+
     /**
      * Returns this UnifiedHunk as a List of Strings.
      * 
@@ -178,11 +138,9 @@ public class UnifiedHunk {
     public List<String> hunkToLines() {
         List<String> hunkLines = new ArrayList<String>();
         hunkLines.add(getContextInfo());
-        hunkLines.addAll(getStartContext());
-        for (LineChange change : getModifiedLines()) {
+        for (LineChange change : getHunkLines()) {
             hunkLines.add(Utils.transformIntoDiffLine(change));
         }
-        hunkLines.addAll(getEndContext());
         return hunkLines;
     }
     
@@ -198,12 +156,12 @@ public class UnifiedHunk {
      *             0 if the lineNumber did not specify a valid change
      */
     public int removeLine(int lineNumber) {
-        if (lineNumber < 0 || lineNumber >= modifiedLines.size()) {
+        if (lineNumber < 0 || lineNumber >= hunkLines.size()) {
             throw new IllegalArgumentException("Line number is out of bounds");
         }
-        LineChange change = getModifiedLines().get(lineNumber);
+        LineChange change = getHunkLines().get(lineNumber);
         if (change.getType() == LineChange.Type.INSERTION) {
-            modifiedLines.set(lineNumber, null);
+            hunkLines.set(lineNumber, null);
             --revisedHunkSize;
             return 1;
         }
@@ -260,8 +218,8 @@ public class UnifiedHunk {
         if (!(obj instanceof UnifiedHunk)) return false;
         
         UnifiedHunk other = (UnifiedHunk) obj;
-        return originalHunkLines.equals(other.originalHunkLines) &&
-                modifiedLines.equals(other.modifiedLines) &&
+        return //originalHunkLines.equals(other.originalHunkLines) &&
+                hunkLines.equals(other.hunkLines) &&
                 originalLineNumber == other.originalLineNumber &&
                 originalHunkSize == other.originalHunkSize &&
                 revisedLineNumber == other.revisedLineNumber &&
@@ -271,8 +229,8 @@ public class UnifiedHunk {
     
     @Override
     public int hashCode() {
-        return originalHunkLines.hashCode() *
-                modifiedLines.hashCode() *
+        return //originalHunkLines.hashCode() *
+                hunkLines.hashCode() *
                 originalLineNumber *
                 originalHunkSize *
                 revisedHunkSize *

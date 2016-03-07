@@ -208,8 +208,8 @@ public class MultiFileUnifiedDiff implements Patch {
             SingleFileUnifiedDiff currentDiff = diffs.get(diffNum);
             for (int hunkNum = 0; hunkNum < currentDiff.getHunks().size(); hunkNum++) {
                 UnifiedHunk currentHunk = currentDiff.getHunks().get(hunkNum);
-                for (int lineNum = 0; lineNum < currentHunk.getModifiedLines().size(); lineNum++) {
-                    if (currentHunk.getModifiedLines().get(lineNum).equals(diffLine)) {
+                for (int lineNum = 0; lineNum < currentHunk.getHunkLines().size(); lineNum++) {
+                    if (currentHunk.getHunkLines().get(lineNum).equals(diffLine)) {
                         removeLine(diffNum, hunkNum, lineNum);
                         break;
                     }
@@ -230,7 +230,7 @@ public class MultiFileUnifiedDiff implements Patch {
      * @param hunkIndex the zero-based index of the hunk that contains the
      *                  line to be removed
      * @param lineIndex is the zero-based index of the line to be removed in
-     *                  the {@link UnifiedHunk#getModifiedLines()}
+     *                  the {@link UnifiedHunk#getHunkLines()}
      *                  of the specified unified hunk and unified diff
      */
     public void removeLine(int diffIndex, int hunkIndex, int lineIndex) {
@@ -281,7 +281,7 @@ public class MultiFileUnifiedDiff implements Patch {
         List<LineChange> ret = new ArrayList<>();
         for (SingleFileUnifiedDiff SFUnifiedDiff : diffs) {
             for (UnifiedHunk hunk : SFUnifiedDiff.getHunks()) {
-                for (LineChange change : hunk.getModifiedLines()) {
+                for (LineChange change : hunk.getHunkLines()) {
                     if (change.getType() != LineChange.Type.CONTEXT) {
                         ret.add(change);
                     }
