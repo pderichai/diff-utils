@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import edu.washington.cs.dericp.diffutils.change.LineChange;
 import edu.washington.cs.dericp.diffutils.diff.MultiFileUnifiedDiff;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,5 +64,12 @@ public class UnifiedDiffTests {
     public void testRemoveChange() {
         patch1.removeLine(0, 2, 0);
         assertEquals(patch1.getPatchLines(), Utils.readFile(TEST_DIR + "TestDiff1RemoveChange(0, 2, 0).expected"));
+    }
+
+    @Test
+    public void testGetChanges() {
+        for (LineChange change : patch1.getChanges()) {
+            System.out.println(change.getContent());
+        }
     }
 }
