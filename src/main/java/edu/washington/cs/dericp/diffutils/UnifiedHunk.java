@@ -59,15 +59,15 @@ public class UnifiedHunk {
             String line = originalHunkLines.get(i);
             LineChange.Type lineType = Utils.getType(line);
             if (lineType == LineChange.Type.INSERTION) {
-                currentRevisedLineNum++;
                 hunkLines.add(new LineChange(line.substring(1), -1, currentRevisedLineNum, Utils.getType(line)));
+                currentRevisedLineNum++;
             } else if (lineType == LineChange.Type.DELETION) {
-                currentOriginalLineNum++;
                 hunkLines.add(new LineChange(line.substring(1), currentOriginalLineNum, -1, Utils.getType(line)));
+                currentOriginalLineNum++;
             } else {
+                hunkLines.add(new LineChange(line.substring(1), currentOriginalLineNum, currentRevisedLineNum, Utils.getType(line)));
                 currentOriginalLineNum++;
                 currentRevisedLineNum++;
-                hunkLines.add(new LineChange(line.substring(1), currentOriginalLineNum, currentRevisedLineNum, Utils.getType(line)));
             }
         }
     }
@@ -210,6 +210,13 @@ public class UnifiedHunk {
      */
     public void modifyRevisedLineNumber(int change) {
         revisedLineNumber += change;
+    }
+
+    public void removeChange(LineChange change) {
+        int changeIndex = hunkLines.indexOf(change);
+        if (changeIndex != -1) {
+            removeLine(changeIndex);
+        }
     }
     
     @Override

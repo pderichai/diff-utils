@@ -212,6 +212,12 @@ public class SingleFileUnifiedDiff {
         }
         return diff;
     }
+
+    public void removeChange(LineChange change) {
+        for (UnifiedHunk hunk : hunks) {
+            hunk.removeChange(change);
+        }
+    }
     
     @Override
     public boolean equals(Object obj) {

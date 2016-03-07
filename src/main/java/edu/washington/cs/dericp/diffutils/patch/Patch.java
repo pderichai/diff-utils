@@ -7,4 +7,7 @@ import java.util.List;
 public interface Patch {
 
     List<LineChange> getChanges();
+
+    // might want to implement an iterator to make this better
+    void removeChange(LineChange change);
 }

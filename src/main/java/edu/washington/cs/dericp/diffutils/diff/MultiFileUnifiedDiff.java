@@ -5,6 +5,7 @@ import edu.washington.cs.dericp.diffutils.Utils;
 import edu.washington.cs.dericp.diffutils.change.LineChange;
 import edu.washington.cs.dericp.diffutils.patch.Patch;
 
+import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -289,6 +290,18 @@ public class MultiFileUnifiedDiff implements Patch {
             }
         }
         return ret;
+    }
+
+    public void removeChange(LineChange change) {
+        for (int i = 0; i < diffs.size(); i++) {
+            SingleFileUnifiedDiff diff = diffs.get(i);
+            for (int j = 0; j < diff.getHunks().size(); j++) {
+                UnifiedHunk hunk = diff.getHunk(j);
+                if (hunk.getHunkLines().contains(change)) {
+                    removeLine(i, j, hunk.getHunkLines().indexOf(change));
+                }
+            }
+        }
     }
 
     @Override

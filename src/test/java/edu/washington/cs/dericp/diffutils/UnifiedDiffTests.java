@@ -68,8 +68,12 @@ public class UnifiedDiffTests {
 
     @Test
     public void testGetChanges() {
-        for (LineChange change : patch1.getChanges()) {
-            System.out.println(change.getContent());
-        }
+
+    }
+
+    @Test
+    public void testRemoveLineChange() {
+        patch1.removeChange(new LineChange("     *", 170, -1, LineChange.Type.DELETION));
+        assertEquals(patch1.getPatchLines(), Utils.readFile(TEST_DIR + "TestDiff1RemoveChange(0, 2, 0).expected"));
     }
 }
