@@ -57,6 +57,7 @@ public class UnifiedHunk {
         modifiedLines = new ArrayList<LineChange>();
         int currentOriginalLineNum = originalLineNumber + CONTEXT_SIZE;
         int currentRevisedLineNum = revisedLineNumber + CONTEXT_SIZE;
+        // starting at i = 1 to skipe the line number and hunk size information
         for (int i = 1; i < originalHunkLines.size(); ++i) {
             String line = originalHunkLines.get(i);
             LineChange.Type lineType = Utils.getType(line);
@@ -71,7 +72,6 @@ public class UnifiedHunk {
                 currentRevisedLineNum++;
                 modifiedLines.add(new LineChange(line.substring(1), currentOriginalLineNum, currentRevisedLineNum, Utils.getType(line)));
             }
-            // modifiedLines.add(new LineChange(line.substring(1), 0, 0, Utils.getType(line)));
         }
     }
     
