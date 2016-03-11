@@ -1,5 +1,6 @@
-package edu.washington.cs.dericp.diffutils;
+package edu.washington.cs.dericp.diffutils.diff;
 
+import edu.washington.cs.dericp.diffutils.Utils;
 import edu.washington.cs.dericp.diffutils.change.LineChange;
 
 import java.util.ArrayList;
@@ -7,21 +8,15 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * This class represents a hunk. A hunk denotes changes in a contiguous "hunk"
- * TODO fix this documentation
- * of code. As long as changes are within a certain context size of each other,
- * they can be considered in the same hunk. Each diff is composed of one or
- * more hunks.
- * 
- * Hunks are the components of a diff and can be grouped together in
+ * <p>A UnifiedHunk represents a unified hunk in a unified diff.</p>
+ *
+ * <p>A hunk is defined as a set of changes which occur within a certain context
+ * size number of lines of each other in the original file from which this
+ * UnifiedHunk is derived.</p>
+ *
+ * <p>Hunks are the components of a unified diff and can be grouped together in
  * addition to the context information of a diff to denote all the changes
- * to a single file in a unified diff.
- * 
- * Structure of a hunk:
- *     getContextInfo()
- *     getStartContext()
- *     getHunkLines()
- *     getEndContext()
+ * to a single file.</p>
  */
 public class UnifiedHunk {
     // TODO representation exposure needs to be removed
@@ -174,10 +169,24 @@ public class UnifiedHunk {
         return 0;
     }
 
+    /**
+     * Returns the original line number of this UnifiedHunk. This number
+     * represents the line number in the original file from which this
+     * UnifiedHunk is derived that this UnifiedHunk specifies changes for.
+     *
+     * @return the original line number of this UnifiedHunk
+     */
     public int getOriginalLineNumber() {
         return originalLineNumber;
     }
 
+    /**
+     * Returns the revised line number of this UnifiedHunk. This number
+     * is the line number in the revised file for which this UnifiedHunk specifies
+     * changes that have been made.
+     *
+     * @return the revised lined number of this UnifiedHunk
+     */
     public int getRevisedLineNumber() {
         return revisedLineNumber;
     }
@@ -204,7 +213,7 @@ public class UnifiedHunk {
     
     /**
      * Changes the revised line number by a given amount. The revised line
-     * number is where this hunk starts in the revised line.
+     * number is where this hunk starts in the revised file.
      * 
      * @param change is the amount that the revised line number will be changed
      */
@@ -212,6 +221,12 @@ public class UnifiedHunk {
         revisedLineNumber += change;
     }
 
+    /**
+     * Removes a change from this UnifiedHunk.
+     *
+     * @param change the change that will no longer be contained in this
+     *               UnifiedHunk
+     */
     public void removeChange(LineChange change) {
         int changeIndex = hunkLines.indexOf(change);
         if (changeIndex != -1) {

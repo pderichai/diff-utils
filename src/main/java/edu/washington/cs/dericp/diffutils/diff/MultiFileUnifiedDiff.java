@@ -1,25 +1,26 @@
 package edu.washington.cs.dericp.diffutils.diff;
 
-import edu.washington.cs.dericp.diffutils.UnifiedHunk;
 import edu.washington.cs.dericp.diffutils.Utils;
 import edu.washington.cs.dericp.diffutils.change.LineChange;
 import edu.washington.cs.dericp.diffutils.patch.Patch;
 
-import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * <p>A MultiFileUnifiedDiff represents a patch file and is a collection of {@link SingleFileUnifiedDiff}s.</p>
+ * <p>A MultiFileUnifiedDiff represents a unified diff patch of multiple files
+ * and is a collection of {@link SingleFileUnifiedDiff}s. A MultiFileUnifiedDiff is
+ * a type of Patch.</p>
  *
- * <p>A single-file unified diff is a unified diff that represents changes to a
- * single file.</p>
+ * <p>A multi-file unified diff is a unified diff that represents changes to
+ * multiple files.</p>
  *
  * <p>A MultiFileUnifiedDiff provides methods for modifying the patch that it represents.
- * If the MultiFileUnifiedDiff was created from a patch file, these changes will not modify
- * the actual file. However, MultiFileUnifiedDiff provides a method to write the patch that
- * this MultiFileUnifiedDiff instance represents to a file.</p>
+ * When a MultiFileUnifiedDiff is created from an actual unified diff file, these methods
+ * will not modify the file that this MultiFileUnifiedDiff was created from. However,
+ * MultiFileUnifiedDiff provides a method to write the patch that this
+ * MultiFileUnifiedDiff instance represents to a file.</p>
  *
  * <p>A MultiFileUnifiedDiff provides methods to access information about the patch it represents.
  * In particular, a MultiFileUnifiedDiff allows the user to obtain a SingleFileUnifiedDiff
@@ -194,33 +195,8 @@ public class MultiFileUnifiedDiff implements Patch {
         }
     }
 
-    // TODO this method needs to be changed completely
     /**
-     * THIS METHOD IS BUGGY AND THE DOCUMENTATION IS INCORRECT! please ignore.
-     *
-     * Removes a change in the unified diff. Conceptually, this undoes a single
-     * change in a hunk.
-     * 
-     * @param diffLine is the exact line in the unified diff that should be
-     *        undone
-     */
-    public void removeLine(String diffLine) {
-        for (int diffNum = 0; diffNum < diffs.size(); diffNum++) {
-            SingleFileUnifiedDiff currentDiff = diffs.get(diffNum);
-            for (int hunkNum = 0; hunkNum < currentDiff.getHunks().size(); hunkNum++) {
-                UnifiedHunk currentHunk = currentDiff.getHunks().get(hunkNum);
-                for (int lineNum = 0; lineNum < currentHunk.getHunkLines().size(); lineNum++) {
-                    if (currentHunk.getHunkLines().get(lineNum).equals(diffLine)) {
-                        removeLine(diffNum, hunkNum, lineNum);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    
-    /**
-     * Removes a line from the specified unified hunk in the specified single-file
+     * Removes a change from the specified unified hunk in the specified single-file
      * unified diff in this MultiFileUnifiedDiff. Conceptually, the change denoted by the specified
      * line will no longer be represented by this MultiFileUnifiedDiff. Once a line is removed,
      * the indices of the lines in the specified unified hunk will remain
@@ -234,7 +210,7 @@ public class MultiFileUnifiedDiff implements Patch {
      *                  the {@link UnifiedHunk#getHunkLines()}
      *                  of the specified unified hunk and unified diff
      */
-    public void removeLine(int diffIndex, int hunkIndex, int lineIndex) {
+    public void removeChange(int diffIndex, int hunkIndex, int lineIndex) {
         List<UnifiedHunk> hunks = diffs.get(diffIndex).getHunks();
         UnifiedHunk modifiedHunk = hunks.get(hunkIndex);
         int result = modifiedHunk.removeLine(lineIndex);
@@ -274,7 +250,7 @@ public class MultiFileUnifiedDiff implements Patch {
      * 
      * @param pathname path where the patch will be written
      */
-    public void writeUnifiedDiff(String pathname) {
+    public void writePatch(String pathname) {
         Utils.writeFile(getPatchLines(), pathname);
     }
 
@@ -298,7 +274,7 @@ public class MultiFileUnifiedDiff implements Patch {
             for (int j = 0; j < diff.getHunks().size(); j++) {
                 UnifiedHunk hunk = diff.getHunk(j);
                 if (hunk.getHunkLines().contains(change)) {
-                    removeLine(i, j, hunk.getHunkLines().indexOf(change));
+                    removeChange(i, j, hunk.getHunkLines().indexOf(change));
                 }
             }
         }
