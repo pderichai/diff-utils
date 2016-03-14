@@ -8,7 +8,7 @@ import java.util.List;
  * <p>A Patch is a collection of changes to one or more files.</p>
  *
  * <p>A Patch provides a method to obtain all the changes that this Patch
- * represents</p>
+ * represents.</p>
  *
  * <p>A Patch provides a method for the removal of a change.</p>
  *
