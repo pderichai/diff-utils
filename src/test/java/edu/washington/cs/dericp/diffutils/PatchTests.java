@@ -8,6 +8,7 @@ import edu.washington.cs.dericp.diffutils.patch.Patch;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -35,26 +36,36 @@ public class PatchTests {
 
     @Test
     public void testConstructor() {
-        patch1.writePatch(TEST_DIFF_1_OUT);
-        List<String> diffLines1 = Utils.readFile(TEST_DIFF_1);
-        List<String> diffLines1Out = Utils.readFile(TEST_DIFF_1_OUT);
-        assertEquals(diffLines1, diffLines1Out);
+        try {
+            patch1.writePatch(TEST_DIFF_1_OUT);
+            List<String> diffLines1 = Utils.readFile(TEST_DIFF_1);
+            List<String> diffLines1Out = Utils.readFile(TEST_DIFF_1_OUT);
+            assertEquals(diffLines1, diffLines1Out);
 
-        patch2.writePatch(TEST_DIFF_2_OUT);
-        List<String> diffLines2 = Utils.readFile(TEST_DIFF_2);
-        List<String> diffLines2Out = Utils.readFile(TEST_DIFF_2_OUT);
-        assertEquals(diffLines2, diffLines2Out);
+            patch2.writePatch(TEST_DIFF_2_OUT);
+            List<String> diffLines2 = Utils.readFile(TEST_DIFF_2);
+            List<String> diffLines2Out = Utils.readFile(TEST_DIFF_2_OUT);
+            assertEquals(diffLines2, diffLines2Out);
 
-        patch3.writePatch(TEST_DIFF_3_OUT);
-        List<String> diffLines3 = Utils.readFile(TEST_DIFF_3);
-        List<String> diffLines3Out = Utils.readFile(TEST_DIFF_3_OUT);
-        assertEquals(diffLines3, diffLines3Out);
+            patch3.writePatch(TEST_DIFF_3_OUT);
+            List<String> diffLines3 = Utils.readFile(TEST_DIFF_3);
+            List<String> diffLines3Out = Utils.readFile(TEST_DIFF_3_OUT);
+            assertEquals(diffLines3, diffLines3Out);
+        } catch (IOException e) {
+            fail("A test diff could not be read.");
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testRemoveLineChange() {
-        patch1.removeChange(new LineChange("     *", 170, -1, LineChange.Type.DELETION));
-        assertEquals(patch1.getPatchLines(), Utils.readFile(TEST_DIR + "TestDiff1RemoveChange(0, 2, 0).expected"));
+        try {
+            patch1.removeChange(new LineChange("     *", 170, -1, LineChange.Type.DELETION));
+            assertEquals(patch1.getPatchLines(), Utils.readFile(TEST_DIR + "TestDiff1RemoveChange(0, 2, 0).expected"));
+        } catch (IOException e) {
+            fail("A test diff could not be read");
+            e.printStackTrace();
+        }
     }
 }
 

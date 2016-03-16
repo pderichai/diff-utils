@@ -4,6 +4,7 @@ import edu.washington.cs.dericp.diffutils.Utils;
 import edu.washington.cs.dericp.diffutils.change.LineChange;
 import edu.washington.cs.dericp.diffutils.patch.Patch;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,7 +48,7 @@ public class MultiFileUnifiedDiff implements Patch {
      * @param pathname the relative or absolute pathname of the patch that this
      *                 MultiFileUnifiedDiff instance will represent
      */
-    public MultiFileUnifiedDiff(String pathname) {
+    public MultiFileUnifiedDiff(String pathname) throws IOException {
         this(Utils.readFile(pathname));
     }
     
