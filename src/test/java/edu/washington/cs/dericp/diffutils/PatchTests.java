@@ -28,7 +28,7 @@ public class PatchTests {
     private Patch patch3;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         patch1 = new MultiFileUnifiedDiff(TEST_DIFF_1);
         patch2 = new MultiFileUnifiedDiff(TEST_DIFF_2);
         patch3 = new MultiFileUnifiedDiff(TEST_DIFF_3);

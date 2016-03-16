@@ -34,6 +34,7 @@ public class Utils {
      * @param pathname a String, the path of the file on the machine
      * @return a List of Strings representing the lines of the file
      * at the specified pathname
+     * @throws IOException if the file at pathname cannot be read
      */
     public static List<String> readFile(String pathname) throws IOException {
         List<String> lines = new ArrayList<>();
