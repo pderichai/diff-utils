@@ -35,19 +35,14 @@ public class Utils {
      * @return a List of Strings representing the lines of the file
      * at the specified pathname
      */
-    public static List<String> readFile(String pathname) {
-        List<String> lines = new ArrayList<String>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(pathname));
-            while (reader.ready()) {
-                lines.add(reader.readLine());
-            }
-            reader.close();
-            return lines;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+    public static List<String> readFile(String pathname) throws IOException {
+        List<String> lines = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(pathname));
+        while (reader.ready()) {
+            lines.add(reader.readLine());
         }
+        reader.close();
+        return lines;
     }
 
     /**
