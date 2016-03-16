@@ -14,10 +14,18 @@ import java.util.List;
 
 /**
  * This class provides utility functions that are used throughout diff-utils.
+ * Utils is a collection of static methods and does not represent anything.
  */
 public class Utils {
 
     public static final boolean DEBUG = true;
+
+    /**
+     * This private constructor prevents clients from instantiating Utils.
+     */
+    private Utils() {
+
+    }
 
     /**
      * Reads the file at the specified pathname and returns it as a List of
