@@ -29,7 +29,8 @@ public class Utils {
 
     /**
      * Reads the file at the specified pathname and returns it as a List of
-     * Strings, one per line of the file.
+     * Strings, one per line of the file. The newline terminators will be
+     * stripped from each line when stored.
      *
      * @param pathname a String, the path of the file on the machine
      * @return a List of Strings representing the lines of the file
@@ -48,7 +49,8 @@ public class Utils {
 
     /**
      * Writes a List of Strings, each String representing a line in the file,
-     * to the file at the specified pathname.
+     * to the file at the specified pathname. Each line in the output file will
+     * be newline-terminated.
      *
      * @param fileLines are the lines of file stored as a List of Strings, one
      *                  String per line of the file
