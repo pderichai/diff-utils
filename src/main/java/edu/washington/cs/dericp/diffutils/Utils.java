@@ -72,24 +72,4 @@ public class Utils {
             e.printStackTrace();
         }
     }
-
-    public static LineChange.Type getType(String line) {
-        if (line.startsWith("+")) {
-            return LineChange.Type.INSERTION;
-        } else if (line.startsWith("-")) {
-            return LineChange.Type.DELETION;
-        } else {
-            return LineChange.Type.CONTEXT;
-        }
-    }
-
-    public static String transformIntoDiffLine(LineChange change) {
-        if (change.getType() == LineChange.Type.INSERTION) {
-            return "+" + change.getContent();
-        } else if (change.getType() == LineChange.Type.DELETION) {
-            return "-" + change.getContent();
-        } else {
-            return " " + change.getContent();
-        }
-    }
 }

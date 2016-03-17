@@ -1,6 +1,5 @@
 package edu.washington.cs.dericp.diffutils.diff;
 
-import edu.washington.cs.dericp.diffutils.Utils;
 import edu.washington.cs.dericp.diffutils.change.LineChange;
 
 import java.util.ArrayList;
@@ -52,15 +51,15 @@ public class UnifiedHunk {
         // starting at i = 1 to skipe the line number and hunk size information
         for (int i = 1; i < originalHunkLines.size(); ++i) {
             String line = originalHunkLines.get(i);
-            LineChange.Type lineType = Utils.getType(line);
+            LineChange.Type lineType = getType(line);
             if (lineType == LineChange.Type.INSERTION) {
-                hunkLines.add(new LineChange(line.substring(1), -1, currentRevisedLineNum, Utils.getType(line)));
+                hunkLines.add(new LineChange(line.substring(1), -1, currentRevisedLineNum, getType(line)));
                 currentRevisedLineNum++;
             } else if (lineType == LineChange.Type.DELETION) {
-                hunkLines.add(new LineChange(line.substring(1), currentOriginalLineNum, -1, Utils.getType(line)));
+                hunkLines.add(new LineChange(line.substring(1), currentOriginalLineNum, -1, getType(line)));
                 currentOriginalLineNum++;
             } else {
-                hunkLines.add(new LineChange(line.substring(1), currentOriginalLineNum, currentRevisedLineNum, Utils.getType(line)));
+                hunkLines.add(new LineChange(line.substring(1), currentOriginalLineNum, currentRevisedLineNum, getType(line)));
                 currentOriginalLineNum++;
                 currentRevisedLineNum++;
             }
@@ -134,7 +133,7 @@ public class UnifiedHunk {
         List<String> hunkLines = new ArrayList<String>();
         hunkLines.add(getContextInfo());
         for (LineChange change : getHunkLines()) {
-            hunkLines.add(Utils.transformIntoDiffLine(change));
+            hunkLines.add(transformIntoHunkLine(change));
         }
         return hunkLines;
     }
@@ -233,7 +232,40 @@ public class UnifiedHunk {
             removeLine(changeIndex);
         }
     }
-    
+
+    /**
+     * Returns the change type of a line from a unified hunk.
+     *
+     * @param line the unmodified line from a unified hunk
+     * @return the change type the of the line
+     */
+    private static LineChange.Type getType(String line) {
+        if (line.startsWith("+")) {
+            return LineChange.Type.INSERTION;
+        } else if (line.startsWith("-")) {
+            return LineChange.Type.DELETION;
+        } else {
+            return LineChange.Type.CONTEXT;
+        }
+    }
+
+    /**
+     * Returns a the hunk line represented by the specified change. This method
+     * will leave the specified LineChange unmodified.
+     *
+     * @param change the LineChange that will be transformed into a String
+     * @return the hunk line that the specified LineChange represents
+     */
+    private static String transformIntoHunkLine(LineChange change) {
+        if (change.getType() == LineChange.Type.INSERTION) {
+            return "+" + change.getContent();
+        } else if (change.getType() == LineChange.Type.DELETION) {
+            return "-" + change.getContent();
+        } else {
+            return " " + change.getContent();
+        }
+    }
+
     @Override
     public boolean equals (Object obj) {
         if (this == obj) return true;

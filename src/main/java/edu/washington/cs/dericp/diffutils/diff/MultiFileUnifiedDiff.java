@@ -47,6 +47,8 @@ public class MultiFileUnifiedDiff implements Patch {
      * 
      * @param pathname the relative or absolute pathname of the patch that this
      *                 MultiFileUnifiedDiff instance will represent
+     * @throws IOException if the String at the specified pathname cannot
+     *                     be found
      */
     public MultiFileUnifiedDiff(String pathname) throws IOException {
         this(Utils.readFile(pathname));
