@@ -86,6 +86,7 @@ public class SingleFileUnifiedDiff {
      *                  SingleFileUnifiedDiff that will be returned
      * @return the UnifiedHunk at the specified index in this SingleFileUnifiedDiff
      */
+    // TODO: should this ever return null?
     public UnifiedHunk getHunk(int hunkIndex) {
         return hunks.get(hunkIndex);
     }

@@ -272,8 +272,7 @@ public class UnifiedHunk {
         if (!(obj instanceof UnifiedHunk)) return false;
         
         UnifiedHunk other = (UnifiedHunk) obj;
-        return //originalHunkLines.equals(other.originalHunkLines) &&
-                hunkLines.equals(other.hunkLines) &&
+        return hunkLines.equals(other.hunkLines) &&
                 originalLineNumber == other.originalLineNumber &&
                 originalHunkSize == other.originalHunkSize &&
                 revisedLineNumber == other.revisedLineNumber &&
@@ -283,8 +282,7 @@ public class UnifiedHunk {
     
     @Override
     public int hashCode() {
-        return //originalHunkLines.hashCode() *
-                hunkLines.hashCode() *
+        return hunkLines.hashCode() *
                 originalLineNumber *
                 originalHunkSize *
                 revisedHunkSize *
