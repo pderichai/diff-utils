@@ -37,7 +37,7 @@ public class MultiFileUnifiedDiff implements Patch {
     // This field changes depending on what signifies a new diff.
     // In some formats, this could be "diff", and in others, "---".
     // TODO if necessary, turn this into a field that can be set in the constructor
-    private String diffSplit = "diff";
+    private final String DIFF_SPLIT = "diff";
     private List<SingleFileUnifiedDiff> diffs;
     
     /**
@@ -94,13 +94,13 @@ public class MultiFileUnifiedDiff implements Patch {
             currentLine = iter.next();
         }
         while (iter.hasNext() && currentLine != null) {
-            if (currentLine.startsWith(diffSplit)) {
+            if (currentLine.startsWith(DIFF_SPLIT)) {
                 List<String> diffLines = new ArrayList<String>();
                 diffLines.add(currentLine);
                 currentLine = iter.next();
                 
                 // constructing a new SingleFileUnifiedDiff
-                while (!currentLine.startsWith(diffSplit) && iter.hasNext()) {
+                while (!currentLine.startsWith(DIFF_SPLIT) && iter.hasNext()) {
                     diffLines.add(currentLine);
                     currentLine = iter.next();
                 }
@@ -131,10 +131,15 @@ public class MultiFileUnifiedDiff implements Patch {
     /**
      * Returns the {@link SingleFileUnifiedDiff} at the specified index of this MultiFileUnifiedDiff.
      * Modifying the returned SingleFileUnifiedDiff will modify this MultiFileUnifiedDiff.
+     *
+     * It is possible for this method to return null if the SingleFileUnifiedDiff
+     * at the specified diffIndex has already been removed.
+     *
      * @param diffIndex the zero-based index of the single-file unified diff in
      *                  this MultiFileUnifiedDiff that will be returned
      * @return a SingleFileUnifiedDiff instance that represents the specified
-     *         single-file unified diff in this MultiFileUnifiedDiff
+     *         single-file unified diff in this MultiFileUnifiedDiff, null if
+     *         it has already been removed from this MultiFileUnifiedDiff
      */
     public SingleFileUnifiedDiff getDiff(int diffIndex) {
         return diffs.get(diffIndex);
@@ -255,6 +260,19 @@ public class MultiFileUnifiedDiff implements Patch {
         Utils.writeFile(getPatchLines(), pathname);
     }
 
+    /**
+     * Returns a List of all the LineChange objects that this
+     * MultiFileUnifiedDiff contains. This collection of LineChange objects
+     * can be thought of as a collection of every change that this
+     * MultiFileUnifiedDiff represents.
+     *
+     * The List that is returned can be modified without affecting the
+     * multi file unified diff representation of this MultiFileUnifiedDiff
+     * object.
+     *
+     * @return a List of LineChange objects that this MultiFileUnifiedDiff
+     *         contains
+     */
     public List<LineChange> getChanges() {
         List<LineChange> ret = new ArrayList<>();
         for (SingleFileUnifiedDiff SFUnifiedDiff : diffs) {
@@ -269,6 +287,20 @@ public class MultiFileUnifiedDiff implements Patch {
         return ret;
     }
 
+    /**
+     * Removes a change from this MultiFileUnifiedDiff. Conceptually, all the
+     * LineChanges represented by this MultiFileUnifiedDiff with the same
+     * content and type will no longer be represented by this
+     * MultiFileUnifiedDiff.
+     *
+     * For example, if this MultiFileUnifiedDiff represented the insertion
+     * of three different lines into a file, {one, two, three}, then removing
+     * a LineChange with content "one" and of type insertion will result in a
+     * MultiFileUnifiedDiff representing the insertion of two lines,
+     * {two, three}.
+     *
+     * @param change the change to be removed
+     */
     public void removeChange(LineChange change) {
         for (int i = 0; i < diffs.size(); i++) {
             SingleFileUnifiedDiff diff = diffs.get(i);

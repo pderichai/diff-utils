@@ -10,7 +10,8 @@ import java.util.List;
  * <p>A Patch provides a method to obtain all the changes that this Patch
  * represents.</p>
  *
- * <p>A Patch provides a method for the removal of a change with {@link #removeChange(LineChange)}.</p>
+ * <p>A Patch provides a method for the removal of a change with {@link #removeChange(LineChange)}.
+ * This is currently the only way of correctly modifying a Patch.</p>
  *
  * <p>A Patch can be written a to a file or returned as a List of Strings,
  * one String per line of the Patch.</p>

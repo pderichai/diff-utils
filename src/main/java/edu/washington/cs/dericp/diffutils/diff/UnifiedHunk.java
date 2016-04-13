@@ -18,8 +18,7 @@ import java.util.Scanner;
  * to a single file.</p>
  */
 public class UnifiedHunk {
-    // TODO representation exposure needs to be removed
-    
+
     // TODO make this a parameter for the construction of a hunk
     public static final int CONTEXT_SIZE = 3;
     // all the lines exclusive of the CONTEXT_SIZE lines at the beginning
@@ -83,6 +82,9 @@ public class UnifiedHunk {
     
     /**
      * Sets the context information of this UnifiedHunk.
+     *
+     * An example of a line of context information is:
+     * "@@ -167,11 +165,7 @@ public abstract class ValuedEnum extends Enum {"
      * 
      * @param contextInfo is the line of hunk context information will precede
      *        the context lines of this hunk
@@ -282,15 +284,17 @@ public class UnifiedHunk {
     
     @Override
     public int hashCode() {
-        return hunkLines.hashCode() *
-                originalLineNumber *
-                originalHunkSize *
-                revisedHunkSize *
-                revisedLineNumber *
-                revisedHunkSize *
-                filenameInfo.hashCode();
+        int result = 17;
+        result = 31 * result + hunkLines.hashCode();
+        result = 31 * result + originalLineNumber;
+        result = 31 * result + originalHunkSize;
+        result = 31 * result + revisedHunkSize;
+        result = 31 * result + revisedLineNumber;
+        result = 31 * result + revisedHunkSize;
+        result = 31 * result + filenameInfo.hashCode();
+        return result;
     }
-    
+
     @Override
     public String toString() {
         // TODO implement this toString

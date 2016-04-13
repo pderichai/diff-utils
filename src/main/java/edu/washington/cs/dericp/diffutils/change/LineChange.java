@@ -108,10 +108,12 @@ public class LineChange {
 
     @Override
     public int hashCode() {
-        return content.hashCode() * 31 +
-                originalLineNumber * 31 +
-                revisedLineNumber * 31 +
-                type.hashCode() * 31;
+        int result = 17;
+        result = 31 * result + content.hashCode();
+        result = 31 * result + originalLineNumber;
+        result = 31 * result + revisedLineNumber;
+        result = 31 * result + type.hashCode();
+        return result;
     }
 }
 

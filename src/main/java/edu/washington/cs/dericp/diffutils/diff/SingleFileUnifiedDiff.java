@@ -26,15 +26,19 @@ import java.util.List;
  *     getHunks[n].
  *     
  * Note that a UnifiedHunk has its own internal structure. Please see the related
- * documentation at {@link UnifiedHunk}
+ * documentation at {@link UnifiedHunk}.
  */
 public class SingleFileUnifiedDiff {
-    // TODO representation exposure needs to be removed
-    
-    // all the information above the two relative relative paths in a diff
+
+    // contextInfo is a List of Strings that contains the lines at the
+    // beginning of a single file unified diff that specify the relative paths
+    // of the files from which the diff was generated, one String per line
     private List<String> contextInfo;
+    // the relative filepath of the original file
     private String originalDiffPath;
+    // the relative filepath of the revised file
     private String revisedDiffPath;
+    // a List of UnifiedHunk objects which compose this SingleFIleUnifiedDiff
     private List<UnifiedHunk> hunks;
     
     /**
@@ -43,6 +47,8 @@ public class SingleFileUnifiedDiff {
      * @param diffLines is a list of the lines of the diff
      */
     public SingleFileUnifiedDiff(List<String> diffLines) {
+        contextInfo = new ArrayList<String>();
+        hunks = new ArrayList<UnifiedHunk>();
         setContextInfo(diffLines);
         setHunks(diffLines);
     }
@@ -53,7 +59,7 @@ public class SingleFileUnifiedDiff {
      * @param diff is the SingleFileUnifiedDiff to be copied
      */
     public SingleFileUnifiedDiff(SingleFileUnifiedDiff diff) {
-        contextInfo = new ArrayList<String>();
+        contextInfo.clear();
         for (String info : diff.contextInfo) {
             contextInfo.add(info);
         }
@@ -69,12 +75,16 @@ public class SingleFileUnifiedDiff {
         }
     }
 
-    // TODO: potentially remove this method since we have getHunk
     /**
-     * Gets the hunks of this SingleFileUnifiedDiff.
-     * 
+     * Gets the hunks of this SingleFileUnifiedDiff. Modifying the objects in
+     * the List of UnifiedHunk objects that is returned will change the state
+     * of this SingleFileUnifiedDiff.
+     *
      * @return a list of the Hunks of this SingleFileUnifiedDiff
      */
+    // TODO: Restructuring this method so that it doesn't expose representation
+    // would be a huge win. However, representation exposure is currently
+    // necessary for SingleFileUnifiedDiffs to work with MultiFileUnifiedDiffs
     public List<UnifiedHunk> getHunks() {
         return hunks;
     }
@@ -82,11 +92,15 @@ public class SingleFileUnifiedDiff {
     /**
      * Returns the {@link SingleFileUnifiedDiff} at the specified index of this MultiFileUnifiedDiff.
      * Modifying the returned SingleFileUnifiedDiff will modify this MultiFileUnifiedDiff.
+     *
+     * It is possible for this method to return null if the UnifiedHunk at the
+     * specified hunkIndex has already been removed.
+     *
      * @param hunkIndex the zero-based index of the hunk in this
      *                  SingleFileUnifiedDiff that will be returned
-     * @return the UnifiedHunk at the specified index in this SingleFileUnifiedDiff
+     * @return the UnifiedHunk at the specified index in this SingleFileUnifiedDiff,
+     *         null if it has already been removed from this SingleFileUnifiedDiff
      */
-    // TODO: should this ever return null?
     public UnifiedHunk getHunk(int hunkIndex) {
         return hunks.get(hunkIndex);
     }
@@ -112,8 +126,7 @@ public class SingleFileUnifiedDiff {
      *        String per line of the diff
      */
     private void setContextInfo(List<String> diffLines) {
-        // TODO maybe this should be a list.clear()?
-        contextInfo = new ArrayList<String>();
+        contextInfo.clear();
         for (Iterator<String> iter = diffLines.iterator(); iter.hasNext();) {
             String line = iter.next();
             if (line.startsWith("---")) {
@@ -136,7 +149,7 @@ public class SingleFileUnifiedDiff {
             throw new IllegalArgumentException("SingleFileUnifiedDiff is empty");
         }
         
-        hunks = new ArrayList<UnifiedHunk>();
+        hunks.clear();
         Iterator<String> iter = diffLines.iterator();
         String line = iter.next();
         
@@ -213,6 +226,20 @@ public class SingleFileUnifiedDiff {
         return diff;
     }
 
+    /**
+     * Removes a change from this SingleFileUnifiedDiff. Conceptually, all the
+     * LineChanges represented by this SingleFileUnifiedDiff with the same
+     * content and type will no longer be represented by this
+     * SingleFileUnifiedDiff.
+     *
+     * For example, if this SingleFileUnifiedDiff represented the insertion
+     * of three different lines into a file, {one, two, three}, then removing
+     * a LineChange with content "one" and of type insertion will result in a
+     * SingleFileUnifiedDiff representing the insertion of two lines,
+     * {two, three}.
+     *
+     * @param change the change to be removed
+     */
     public void removeChange(LineChange change) {
         for (UnifiedHunk hunk : hunks) {
             hunk.removeChange(change);
