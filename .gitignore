@@ -1,3 +1,10 @@
+# generated files
+.gradle/
+build/
+src/test/java/edu/washington/cs/dericp/diffutils/TestDiff1.out
+src/test/java/edu/washington/cs/dericp/diffutils/TestDiff2.out
+src/test/java/edu/washington/cs/dericp/diffutils/TestDiff3.out
+
 ## macOS
 *.DS_Store
 .AppleDouble
