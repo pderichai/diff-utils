@@ -9,8 +9,9 @@ package edu.washington.cs.dericp.diffutils.change;
 public class LineChange {
 
     /**
-     * There are three types of LineChanges. Insertions, deletions,
-     * context lines which are not changes at all but are lines present
+     * There are three types of LineChanges: insertion, deletion,
+     * context. Context LineChanges are lines which are not changes
+     * at all but are lines present
      * in both the original and revised versions of the file.
      */
     public enum Type {
